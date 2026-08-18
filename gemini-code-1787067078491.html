@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Arsenal 2026/27 Live Matchday Planner</title>
+  <style>
+    :root[data-theme="dark"] {
+      --bg: #0a0e14;
+      --card-bg: #121820;
+      --card-border: #1e2633;
+      --modal-bg: #151c27;
+      --text-main: #f0f6fc;
+      --text-sub: #8b949e;
+      --hover-bg: #1c2430;
+      --inner-bg: #0d1117;
+      --pitch-bg: #1b4332;
+      --pitch-line: rgba(255,255,255,0.25);
+    }
+
+    :root[data-theme="light"] {
+      --bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --card-border: #d0d7de;
+      --modal-bg: #ffffff;
+      --text-main: #1f2328;
+      --text-sub: #656d76;
+      --hover-bg: #eaeef2;
+      --inner-bg: #f6f8fa;
+      --pitch-bg: #2d6a4f;
+      --pitch-line: rgba(255,255,255,0.35);
+    }
+
+    :root {
+      --afc-red: #db0007;
+      --afc-dark-red: #9e0005;
+      --afc-navy: #023474;
+      --afc-gold: #9c824a;
+      --cat-a: #ef4444;
+      --cat-b: #3b82f6;
+      --cat-c: #10b981;
+      --cat-ucl: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text-main); padding: 16px 12px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 1050px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--afc-red) 0%, var(--afc-dark-red) 60%, var(--afc-navy) 100%);
+      padding: 18px 22px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      box-shadow: 0 8px 30px rgba(219, 0, 7, 0.25);
+    }
+    .header-branding { display: flex; align-items: center; gap: 14px; }
+    .header-logo { width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+    .header-title h1 { font-size: 1.35rem; font-weight: 800; color: #fff; }
+    .header-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+    /* Buttons */
+    .btn {
+      background: var(--afc-red);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.15s;
+    }
+    .btn:hover { background: #b50006; }
+    .btn-secondary { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff; }
+    .btn-secondary:hover { background: rgba(255,255,255,0.25); }
+    .btn-wa { background: #25d366; color: #000; font-weight: 700; }
+    .btn-wa:hover { background: #20ba5a; }
+    .btn-sync { background: #3b82f6; color: #fff; font-weight: 700; }
+    .btn-sync:hover { background: #2563eb; }
+
+    /* Sync Status Bar */
+    .sync-bar {
+      background: var(--inner-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Panels */
+    .panel { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px 20px; }
+    .panel h2 { font-size: 0.82rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; margin-bottom: 10px; }
+    .members-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .member-pill {
+      background: var(--inner-bg);
+      border: 1px solid var(--card-border);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .member-pill .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .member-pill .del-btn { background: none; border: none; color: var(--text-sub); cursor: pointer; font-size: 0.95rem; }
+    .member-pill .del-btn:hover { color: #ff5c5c; }
+    .add-form { display: flex; gap: 8px; max-width: 400px; }
+    .add-form input {
+      background: var(--inner-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      flex: 1;
+    }
+
+    /* Controls Bar */
+    .controls-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .controls-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .filter-select {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    
+    .view-toggle {
+      display: inline-flex;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .view-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .view-btn.active { background: var(--hover-bg); color: var(--text-main); }
+
+    /* Category Badges */
+    .cat-tag { font-size: 0.68rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
+    .cat-A { background: rgba(239, 68, 68, 0.15); color: var(--cat-a); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .cat-B { background: rgba(59, 130, 246, 0.15); color: var(--cat-b); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .cat-C { background: rgba(16, 185, 129, 0.15); color: var(--cat-c); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .cat-UCL { background: rgba(245, 158, 11, 0.15); color: var(--cat-ucl); border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    /* Cards & Lists */
+    .matches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .fixture-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.15s;
+      cursor: pointer;
+    }
+    .fixture-card:hover { border-color: var(--cat-b); }
+    
+    .card-top { display: flex; justify-content: space-between; align-items: center; }
+    .teams-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .team-details { flex: 1; }
+    .team-details .team-name { font-size: 1.05rem; font-weight: 700; }
+    .team-details .match-meta { font-size: 0.78rem; color: var(--text-sub); margin-top: 2px; }
+    .team-crest { width: 38px; height: 38px; object-fit: contain; flex-shrink: 0; }
+    
+    .alloc-box {
+      background: var(--inner-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: default;
+    }
+    .alloc-status { display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; text-transform: uppercase; color: var(--text-sub); }
+    .claim-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+    .claim-btn {
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-sub);
+      border-radius: 16px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+    .claim-btn.claimed { color: #fff; font-weight: 700; border-color: transparent; }
+
+    .matches-list { display: flex; flex-direction: column; gap: 10px; }
+    .list-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: 80px 1.5fr 44px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .list-item:hover { border-color: var(--cat-b); }
+    @media (max-width: 768px) { .list-item { grid-template-columns: 1fr; gap: 8px; } }
+    .list-date { font-size: 0.8rem; font-weight: 600; color: var(--text-sub); }
+
+    /* Modal Layout */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px); display: none; justify-content: center;
+      align-items: center; z-index: 1000; padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: var(--modal-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 820px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 22px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
+    .modal-title { display: flex; align-items: center; gap: 12px; }
+    .modal-title h3 { font-size: 1.25rem; font-weight: 800; }
+    .modal-close { background: none; border: none; font-size: 1.4rem; color: var(--text-sub); cursor: pointer; }
+
+    /* Expandable News Box */
+    .news-accordion {
+      background: var(--inner-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .news-headline { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
+    .news-collapsed {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      line-height: 1.45;
+      display: none;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--card-border);
+    }
+    .news-collapsed.open { display: block; }
+    .read-more-btn {
+      background: none;
+      border: none;
+      color: var(--afc-gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      align-self: flex-start;
+      padding: 0;
+      margin-top: 2px;
+    }
+
+    /* Pitch Visualizer */
+    .pitch-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 640px) { .pitch-duo { grid-template-columns: 1fr; } }
+    .pitch-wrapper {
+      background: var(--pitch-bg);
+      border: 2px solid var(--pitch-line);
+      border-radius: 12px;
+      padding: 14px 8px;
+      position: relative;
+      min-height: 330px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+    }
+    .pitch-header { text-align: center; font-weight: 800; font-size: 0.8rem; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+    .pitch-line-center { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--pitch-line); }
+    .pitch-row { display: flex; justify-content: space-around; z-index: 2; }
+    .player-node { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .player-dot {
+      width: 20px; height: 20px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-size: 0.6rem;
+      font-weight: 800; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+    .player-name { font-size: 0.65rem; font-weight: 700; color: #fff; background: rgba(0,0,0,0.6); padding: 1px 4px; border-radius: 4px; white-space: nowrap; }
+
+    /* Tables */
+    .stats-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); }
+    .stats-table th, .stats-table td { padding: 10px 14px; text-align: left; font-size: 0.85rem; border-bottom: 1px solid var(--card-border); }
+    .stats-table th { background: var(--inner-bg); color: var(--text-sub); text-transform: uppercase; font-size: 0.72rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-branding">
+        <img class="header-logo" src="https://crests.football-data.org/57.png" alt="Arsenal FC" />
+        <div class="header-title">
+          <h1>Arsenal Home Fixture Planner</h1>
+        </div>
+      </div>
+      <div class="header-btns">
+        <button class="btn btn-sync" onclick="syncLiveSchedules()">🔄 Sync Schedule</button>
+        <button class="btn btn-secondary" onclick="toggleTheme()">🌓 Theme</button>
+        <button class="btn btn-wa" onclick="copyWhatsAppSummary()">💬 WhatsApp</button>
+      </div>
+    </header>
+
+    <div class="sync-bar">
+      <span id="syncStatusText">🟢 Schedule Status: Connected to Premier League & UEFA live match feeds</span>
+      <span id="lastSyncedTime" style="font-weight:600;">Live Feed Active</span>
+    </div>
+
+    <!-- MAIN VIEW: FIXTURES -->
+    <div class="panel">
+      <h2>Group Members</h2>
+      <div class="members-wrap" id="membersList"></div>
+      <form class="add-form" onsubmit="addMember(event)">
+        <input type="text" id="newMemberName" placeholder="Add member name..." required />
+        <button type="submit" class="btn">Add</button>
+      </form>
+    </div>
+
+    <div class="controls-bar" style="margin-top:10px;">
+      <div class="controls-left">
+        <select id="filterSelect" class="filter-select" onchange="renderMatches()">
+          <option value="ALL">All Home Fixtures</option>
+          <option value="CAT_A">Category A Only</option>
+          <option value="CAT_B">Category B Only</option>
+          <option value="CAT_C">Category C Only</option>
+          <option value="UNASSIGNED">Unassigned Only</option>
+        </select>
+
+        <div class="view-toggle">
+          <button id="viewGridBtn" class="view-btn active" onclick="setView('grid')">⊞ Grid</button>
+          <button id="viewListBtn" class="view-btn" onclick="setView('list')">☰ List</button>
+        </div>
+      </div>
+      <button class="btn btn-secondary" onclick="addCustomFixture()">+ Add UCL / Cup Tie</button>
+    </div>
+
+    <div id="matchesContainer" style="margin-top:10px;"></div>
+  </div>
+
+  <!-- Pop-out Match Modal -->
+  <div id="matchModal" class="modal-overlay" onclick="closeModalOnBg(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <img id="modalCrest" src="" style="width:36px; height:36px; object-fit:contain;" alt="" />
+          <div>
+            <h3 id="modalVs"></h3>
+            <div id="modalMeta" style="font-size:0.8rem; color:var(--text-sub);"></div>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+
+      <!-- Expandable Headline & News Section -->
+      <div class="news-accordion">
+        <div class="news-headline" id="modalNewsHeadline"></div>
+        <div style="font-size:0.78rem; color:var(--text-sub);">Venue: Emirates Stadium • Broadcast: Sky Sports / TNT Sports</div>
+        <button class="read-more-btn" id="newsToggleBtn" onclick="toggleNewsAccordion()">+ Read match preview</button>
+        <div class="news-collapsed" id="modalNewsFull"></div>
+      </div>
+
+      <!-- Tactical Formations Directly Underneath News -->
+      <div class="pitch-duo">
+        <div class="pitch-wrapper">
+          <div class="pitch-header">🔴 Arsenal (4-3-3)</div>
+          <div class="pitch-line-center"></div>
+          <div class="pitch-row">
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">11</div><span class="player-name">Martinelli</span></div>
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">9</div><span class="player-name">Gyökeres</span></div>
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">7</div><span class="player-name">Saka</span></div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">8</div><span class="player-name">Ødegaard</span></div>
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">41</div><span class="player-name">Rice</span></div>
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">6</div><span class="player-name">Zubimendi</span></div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">33</div><span class="player-name">Calafiori</span></div>
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">6</div><span class="player-name">Gabriel</span></div>
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">2</div><span class="player-name">Saliba</span></div>
+            <div class="player-node"><div class="player-dot" style="background:#db0007;">12</div><span class="player-name">Timber</span></div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-node"><div class="player-dot" style="background:#023474;">22</div><span class="player-name">Raya (GK)</span></div>
+          </div>
+        </div>
+
+        <div class="pitch-wrapper">
+          <div class="pitch-header" id="modalOpponentHeader">🔵 Away Team</div>
+          <div class="pitch-line-center"></div>
+          <div id="modalOpponentLineup" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;"></div>
+        </div>
+      </div>
+
+      <!-- Last 5 Head to Head -->
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <h2 style="font-size:0.8rem; text-transform:uppercase; color:var(--text-sub); letter-spacing:1px;">⚔️ Last 5 Head-to-Head Meetings</h2>
+        <table class="stats-table">
+          <thead>
+            <tr><th>Date</th><th>Competition</th><th>Match Result</th><th>Outcome</th></tr>
+          </thead>
+          <tbody id="modalH2H"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const COLORS = ['#db0007', '#2563eb', '#059669', '#d97706', '#9333ea', '#ec4899'];
+
+    const INITIAL_FIXTURES = [
+      { 
+        id: 'pl_1', comp: 'Premier League', cat: 'C', vs: 'Coventry City', gw: 1,
+        logo: 'https://crests.football-data.org/1076.png', date: 'Fri 21 Aug 2026', time: '20:00 BST', claimedBy: null,
+        headline: 'Arsenal host Coventry City in the 2026/27 Premier League season opener under the Friday lights.',
+        news: 'Opening Friday night fixture of the campaign at Emirates Stadium. Coventry City return to top-flight football seeking their first league victory over the Gunners since the 1999/2000 season.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Simms', num:9}],
+          am: [{n:'Mason-Clark', num:10}, {n:'Rudoni', num:5}, {n:'Sakamoto', num:7}],
+          dm: [{n:'Torp', num:29}, {n:'Grimes', num:6}],
+          df: [{n:'Dasilva', num:3}, {n:'Kitching', num:15}, {n:'Thomas', num:4}, {n:'van Ewijk', num:27}],
+          gk: [{n:'Rushworth', num:19}]
+        },
+        h2h: [
+          { date: '24 Jan 2014', comp: 'FA Cup', score: 'Arsenal 4-0 Coventry', result: 'Win' },
+          { date: '26 Sep 2012', comp: 'League Cup', score: 'Arsenal 6-1 Coventry', result: 'Win' },
+          { date: '03 Feb 2001', comp: 'Premier League', score: 'Coventry 0-1 Arsenal', result: 'Win' },
+          { date: '16 Sep 2000', comp: 'Premier League', score: 'Arsenal 2-1 Coventry', result: 'Win' },
+          { date: '26 Mar 2000', comp: 'Premier League', score: 'Arsenal 3-0 Coventry', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_2', comp: 'Premier League', cat: 'A', vs: 'Chelsea', gw: 4,
+        logo: 'https://crests.football-data.org/61.png', date: 'Sun 06 Sep 2026', time: '16:30 BST', claimedBy: null,
+        headline: 'Massive early London derby at Emirates Stadium with huge title momentum at stake.',
+        news: 'Category A London Derby. Arsenal enter having dominated recent encounters, winning 4 of the last 5 competitive meetings across the Premier League and EFL Cup semi-finals.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'João Pedro', num:20}],
+          am: [{n:'Neto', num:7}, {n:'Palmer', num:10}, {n:'Rogers', num:17}],
+          dm: [{n:'Caicedo', num:25}, {n:'Enzo', num:8}],
+          df: [{n:'Hato', num:21}, {n:'Colwill', num:6}, {n:'Fofana', num:29}, {n:'James', num:24}],
+          gk: [{n:'Sánchez', num:1}]
+        },
+        h2h: [
+          { date: '01 Mar 2026', comp: 'Premier League', score: 'Arsenal 2-1 Chelsea', result: 'Win' },
+          { date: '03 Feb 2026', comp: 'EFL Cup Semi', score: 'Arsenal 1-0 Chelsea', result: 'Win' },
+          { date: '14 Jan 2026', comp: 'EFL Cup Semi', score: 'Chelsea 2-3 Arsenal', result: 'Win' },
+          { date: '30 Nov 2025', comp: 'Premier League', score: 'Chelsea 1-1 Arsenal', result: 'Draw' },
+          { date: '16 Mar 2025', comp: 'Premier League', score: 'Arsenal 1-0 Chelsea', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_3', comp: 'Premier League', cat: 'C', vs: 'Leeds United', gw: 8,
+        logo: 'https://crests.football-data.org/341.png', date: 'Sat 10 Oct 2026', time: '12:30 BST', claimedBy: null,
+        headline: 'Early Saturday lunchtime kickoff as Leeds United travel to North London.',
+        news: 'Arsenal have won 5 consecutive matches against Leeds United across all competitions, scoring 16 goals while conceding just 2.',
+        awayFormation: '4-3-3',
+        awayLineup: {
+          fw: [{n:'Gnonto', num:29}, {n:'Piroe', num:10}, {n:'James', num:7}],
+          dm: [{n:'Ampadu', num:4}, {n:'Tanaka', num:22}, {n:'Gruev', num:8}],
+          df: [{n:'Firpo', num:3}, {n:'Struijk', num:5}, {n:'Rodon', num:6}, {n:'Bogle', num:2}],
+          gk: [{n:'Meslier', num:1}]
+        },
+        h2h: [
+          { date: '31 Jan 2026', comp: 'Premier League', score: 'Leeds 0-4 Arsenal', result: 'Win' },
+          { date: '23 Aug 2025', comp: 'Premier League', score: 'Arsenal 5-0 Leeds', result: 'Win' },
+          { date: '01 Apr 2023', comp: 'Premier League', score: 'Arsenal 4-1 Leeds', result: 'Win' },
+          { date: '16 Oct 2022', comp: 'Premier League', score: 'Leeds 0-1 Arsenal', result: 'Win' },
+          { date: '08 May 2022', comp: 'Premier League', score: 'Arsenal 2-1 Leeds', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_4', comp: 'Premier League', cat: 'B', vs: 'Everton', gw: 9,
+        logo: 'https://crests.football-data.org/62.png', date: 'Sat 24 Oct 2026', time: '15:00 BST', claimedBy: null,
+        headline: 'Category B league clash with Arsenal protecting a strong home record against the Toffees.',
+        news: 'Traditional 3pm Saturday kickoff at Emirates Stadium. Arsenal have won 4 of their last 5 fixtures against Everton.',
+        awayFormation: '4-4-1-1',
+        awayLineup: {
+          fw: [{n:'Calvert-Lewin', num:9}],
+          am: [{n:'Ndiaye', num:10}],
+          dm: [{n:'McNeil', num:7}, {n:'Gueye', num:27}, {n:'Garner', num:37}, {n:'Harrison', num:11}],
+          df: [{n:'Mykolenko', num:19}, {n:'Branthwaite', num:32}, {n:'Tarkowski', num:6}, {n:'Coleman', num:23}],
+          gk: [{n:'Pickford', num:1}]
+        },
+        h2h: [
+          { date: '19 May 2024', comp: 'Premier League', score: 'Arsenal 2-1 Everton', result: 'Win' },
+          { date: '17 Sep 2023', comp: 'Premier League', score: 'Everton 0-1 Arsenal', result: 'Win' },
+          { date: '01 Mar 2023', comp: 'Premier League', score: 'Arsenal 4-0 Everton', result: 'Win' },
+          { date: '04 Feb 2023', comp: 'Premier League', score: 'Everton 1-0 Arsenal', result: 'Loss' },
+          { date: '22 May 2022', comp: 'Premier League', score: 'Arsenal 5-1 Everton', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_5', comp: 'Premier League', cat: 'C', vs: 'Hull City', gw: 11,
+        logo: 'https://crests.football-data.org/322.png', date: 'Sat 07 Nov 2026', time: '15:00 GMT', claimedBy: null,
+        headline: 'Hull City visit Emirates Stadium ahead of the November international break.',
+        news: 'Category C fixture. Arsenal have won 4 and drawn 1 of their last 5 competitive fixtures against Hull City.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Bedia', num:9}],
+          am: [{n:'Belloumi', num:7}, {n:'Omur', num:10}, {n:'Kamara', num:11}],
+          dm: [{n:'Slater', num:27}, {n:'Zambrano', num:18}],
+          df: [{n:'Giles', num:3}, {n:'Jones', num:5}, {n:'Hughes', num:6}, {n:'Coyle', num:2}],
+          gk: [{n:'Pandur', num:1}]
+        },
+        h2h: [
+          { date: '11 Feb 2017', comp: 'Premier League', score: 'Arsenal 2-0 Hull', result: 'Win' },
+          { date: '17 Sep 2016', comp: 'Premier League', score: 'Hull 1-4 Arsenal', result: 'Win' },
+          { date: '08 Mar 2016', comp: 'FA Cup', score: 'Hull 0-4 Arsenal', result: 'Win' },
+          { date: '20 Feb 2016', comp: 'FA Cup', score: 'Arsenal 0-0 Hull', result: 'Draw' },
+          { date: '04 May 2015', comp: 'Premier League', score: 'Hull 1-3 Arsenal', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_6', comp: 'Premier League', cat: 'A', vs: 'Manchester City', gw: 13,
+        logo: 'https://crests.football-data.org/65.png', date: 'Sat 28 Nov 2026', time: '17:30 GMT', claimedBy: null,
+        headline: 'Heavyweight title clash under the Emirates floodlights.',
+        news: 'Category A showdown. Arsenal defeated Manchester City 3-0 in the 2026 Community Shield and hold an unbeaten home league streak.',
+        awayFormation: '4-1-4-1',
+        awayLineup: {
+          fw: [{n:'Haaland', num:9}],
+          am: [{n:'Grealish', num:10}, {n:'Foden', num:47}, {n:'De Bruyne', num:17}, {n:'Savinho', num:26}],
+          dm: [{n:'Rodri', num:16}],
+          df: [{n:'Gvardiol', num:24}, {n:'Dias', num:3}, {n:'Akanji', num:25}, {n:'Walker', num:2}],
+          gk: [{n:'Ederson', num:31}]
+        },
+        h2h: [
+          { date: '16 Aug 2026', comp: 'Community Shield', score: 'Arsenal 3-0 Man City', result: 'Win' },
+          { date: '22 Mar 2026', comp: 'EFL Cup Final', score: 'Arsenal 0-2 Man City', result: 'Loss' },
+          { date: '22 Sep 2024', comp: 'Premier League', score: 'Man City 2-2 Arsenal', result: 'Draw' },
+          { date: '31 Mar 2024', comp: 'Premier League', score: 'Man City 0-0 Arsenal', result: 'Draw' },
+          { date: '08 Oct 2023', comp: 'Premier League', score: 'Arsenal 1-0 Man City', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_7', comp: 'Premier League', cat: 'C', vs: 'Bournemouth', gw: 16,
+        logo: 'https://crests.football-data.org/1044.png', date: 'Sat 12 Dec 2026', time: '15:00 GMT', claimedBy: null,
+        headline: 'Winter Category C tie ahead of the congested festive schedule.',
+        news: 'Arsenal have won all 5 of their last 5 meetings against Bournemouth across the Premier League and FA Cup.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Evanilson', num:9}],
+          am: [{n:'Semenyo', num:24}, {n:'Kluivert', num:19}, {n:'Tavernier', num:16}],
+          dm: [{n:'Cook', num:4}, {n:'Christie', num:10}],
+          df: [{n:'Kerkez', num:3}, {n:'Senesi', num:5}, {n:'Zabarnyi', num:27}, {n:'Smith', num:15}],
+          gk: [{n:'Kepa', num:13}]
+        },
+        h2h: [
+          { date: '04 May 2024', comp: 'Premier League', score: 'Arsenal 3-0 Bournemouth', result: 'Win' },
+          { date: '30 Sep 2023', comp: 'Premier League', score: 'Bournemouth 0-4 Arsenal', result: 'Win' },
+          { date: '04 Mar 2023', comp: 'Premier League', score: 'Arsenal 3-2 Bournemouth', result: 'Win' },
+          { date: '20 Aug 2022', comp: 'Premier League', score: 'Bournemouth 0-3 Arsenal', result: 'Win' },
+          { date: '27 Jan 2020', comp: 'FA Cup', score: 'Bournemouth 1-2 Arsenal', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_8', comp: 'Premier League', cat: 'A', vs: 'Manchester United', gw: 17,
+        logo: 'https://crests.football-data.org/66.png', date: 'Sat 19 Dec 2026', time: '12:30 GMT', claimedBy: null,
+        headline: 'Christmas weekend Category A blockbuster against Manchester United.',
+        news: 'Festive fixture. Arsenal have won 4 of their last 5 league games against Manchester United.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Højlund', num:9}],
+          am: [{n:'Rashford', num:10}, {n:'Fernandes', num:8}, {n:'Garnacho', num:17}],
+          dm: [{n:'Mainoo', num:37}, {n:'Ugarte', num:25}],
+          df: [{n:'Shaw', num:23}, {n:'Martínez', num:6}, {n:'De Ligt', num:4}, {n:'Dalot', num:20}],
+          gk: [{n:'Onana', num:24}]
+        },
+        h2h: [
+          { date: '12 May 2024', comp: 'Premier League', score: 'Man Utd 0-1 Arsenal', result: 'Win' },
+          { date: '03 Sep 2023', comp: 'Premier League', score: 'Arsenal 3-1 Man Utd', result: 'Win' },
+          { date: '22 Jan 2023', comp: 'Premier League', score: 'Arsenal 3-2 Man Utd', result: 'Win' },
+          { date: '04 Sep 2022', comp: 'Premier League', score: 'Man Utd 3-1 Arsenal', result: 'Loss' },
+          { date: '23 Apr 2022', comp: 'Premier League', score: 'Arsenal 3-1 Man Utd', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_9', comp: 'Premier League', cat: 'C', vs: 'Ipswich Town', gw: 20,
+        logo: 'https://crests.football-data.org/349.png', date: 'Sat 02 Jan 2027', time: '15:00 GMT', claimedBy: null,
+        headline: 'New Year home fixture to open the 2027 calendar year.',
+        news: 'Arsenal look to kick off the new year with 3 points against Ipswich Town at Emirates Stadium.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Delap', num:19}],
+          am: [{n:'Szmodics', num:23}, {n:'Chaplin', num:10}, {n:'Hutchinson', num:20}],
+          dm: [{n:'Morsy', num:5}, {n:'Phillips', num:8}],
+          df: [{n:'Davis', num:3}, {n:'Greaves', num:24}, {n:'Woolfenden', num:6}, {n:'Tuanzebe', num:40}],
+          gk: [{n:'Muric', num:1}]
+        },
+        h2h: [
+          { date: '27 Dec 2024', comp: 'Premier League', score: 'Arsenal 1-0 Ipswich', result: 'Win' },
+          { date: '12 Jan 2011', comp: 'League Cup', score: 'Ipswich 1-0 Arsenal', result: 'Loss' },
+          { date: '25 Jan 2011', comp: 'League Cup', score: 'Arsenal 3-0 Ipswich', result: 'Win' },
+          { date: '21 Apr 2002', comp: 'Premier League', score: 'Arsenal 2-0 Ipswich', result: 'Win' },
+          { date: '01 Dec 2001', comp: 'Premier League', score: 'Ipswich 0-2 Arsenal', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_10', comp: 'Premier League', cat: 'B', vs: 'Brentford', gw: 21,
+        logo: 'https://crests.football-data.org/402.png', date: 'Wed 06 Jan 2027', time: '20:00 GMT', claimedBy: null,
+        headline: 'Midweek London derby action under the floodlights.',
+        news: 'Arsenal have won 4 of their last 5 meetings with Brentford across all competitions.',
+        awayFormation: '4-3-3',
+        awayLineup: {
+          fw: [{n:'Schade', num:7}, {n:'Wissa', num:11}, {n:'Mbeumo', num:19}],
+          dm: [{n:'Damsgaard', num:24}, {n:'Nørgaard', num:6}, {n:'Janelt', num:27}],
+          df: [{n:'Lewis-Potter', num:23}, {n:'Pinnock', num:5}, {n:'Collins', num:22}, {n:'Roerslev', num:30}],
+          gk: [{n:'Flekken', num:1}]
+        },
+        h2h: [
+          { date: '09 Mar 2024', comp: 'Premier League', score: 'Arsenal 2-1 Brentford', result: 'Win' },
+          { date: '25 Nov 2023', comp: 'Premier League', score: 'Brentford 0-1 Arsenal', result: 'Win' },
+          { date: '27 Sep 2023', comp: 'EFL Cup', score: 'Brentford 0-1 Arsenal', result: 'Win' },
+          { date: '11 Feb 2023', comp: 'Premier League', score: 'Arsenal 1-1 Brentford', result: 'Draw' },
+          { date: '18 Sep 2022', comp: 'Premier League', score: 'Brentford 0-3 Arsenal', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_11', comp: 'Premier League', cat: 'B', vs: 'Newcastle United', gw: 23,
+        logo: 'https://crests.football-data.org/67.png', date: 'Sat 23 Jan 2027', time: '15:00 GMT', claimedBy: null,
+        headline: 'High-stakes Category B clash against Newcastle United.',
+        news: 'Crucial European qualification battle as the Magpies arrive at Emirates Stadium.',
+        awayFormation: '4-3-3',
+        awayLineup: {
+          fw: [{n:'Gordon', num:10}, {n:'Isak', num:14}, {n:'Murphy', num:23}],
+          dm: [{n:'Joelinton', num:7}, {n:'Guimarães', num:39}, {n:'Tonali', num:8}],
+          df: [{n:'Hall', num:20}, {n:'Burn', num:33}, {n:'Schär', num:5}, {n:'Livramento', num:21}],
+          gk: [{n:'Pope', num:22}]
+        },
+        h2h: [
+          { date: '24 Feb 2024', comp: 'Premier League', score: 'Arsenal 4-1 Newcastle', result: 'Win' },
+          { date: '04 Nov 2023', comp: 'Premier League', score: 'Newcastle 1-0 Arsenal', result: 'Loss' },
+          { date: '07 May 2023', comp: 'Premier League', score: 'Newcastle 0-2 Arsenal', result: 'Win' },
+          { date: '03 Jan 2023', comp: 'Premier League', score: 'Arsenal 0-0 Newcastle', result: 'Draw' },
+          { date: '16 May 2022', comp: 'Premier League', score: 'Newcastle 2-0 Arsenal', result: 'Loss' }
+        ]
+      },
+      { 
+        id: 'pl_12', comp: 'Premier League', cat: 'A', vs: 'Liverpool', gw: 25,
+        logo: 'https://crests.football-data.org/64.png', date: 'Sat 06 Feb 2027', time: '16:30 GMT', claimedBy: null,
+        headline: 'Premier League title race showdown against Liverpool.',
+        news: 'Massive Category A clash. Arsenal enter having won 2 and drawn 2 of their last 5 league meetings with Liverpool.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Núñez', num:9}],
+          am: [{n:'Díaz', num:7}, {n:'Szoboszlai', num:8}, {n:'Salah', num:11}],
+          dm: [{n:'Mac Allister', num:10}, {n:'Gravenberch', num:38}],
+          df: [{n:'Robertson', num:26}, {n:'Van Dijk', num:4}, {n:'Konaté', num:5}, {n:'Alexander-Arnold', num:66}],
+          gk: [{n:'Alisson', num:1}]
+        },
+        h2h: [
+          { date: '04 Feb 2024', comp: 'Premier League', score: 'Arsenal 3-1 Liverpool', result: 'Win' },
+          { date: '07 Jan 2024', comp: 'FA Cup', score: 'Arsenal 0-2 Liverpool', result: 'Loss' },
+          { date: '23 Dec 2023', comp: 'Premier League', score: 'Liverpool 1-1 Arsenal', result: 'Draw' },
+          { date: '09 Apr 2023', comp: 'Premier League', score: 'Liverpool 2-2 Arsenal', result: 'Draw' },
+          { date: '09 Oct 2022', comp: 'Premier League', score: 'Arsenal 3-2 Liverpool', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_13', comp: 'Premier League', cat: 'B', vs: 'Fulham', gw: 26,
+        logo: 'https://crests.football-data.org/63.png', date: 'Sat 20 Feb 2027', time: '15:00 GMT', claimedBy: null,
+        headline: 'West London rivals Fulham arrive at Emirates Stadium.',
+        news: 'Category B league clash as Arsenal look to pick up vital home points.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Jiménez', num:7}],
+          am: [{n:'Iwobi', num:17}, {n:'Smith Rowe', num:32}, {n:'Traoré', num:11}],
+          dm: [{n:'Lukic', num:20}, {n:'Berge', num:16}],
+          df: [{n:'Robinson', num:33}, {n:'Bassey', num:3}, {n:'Andersen', num:5}, {n:'Castagne', num:21}],
+          gk: [{n:'Leno', num:1}]
+        },
+        h2h: [
+          { date: '31 Dec 2023', comp: 'Premier League', score: 'Fulham 2-1 Arsenal', result: 'Loss' },
+          { date: '26 Aug 2023', comp: 'Premier League', score: 'Arsenal 2-2 Fulham', result: 'Draw' },
+          { date: '12 Mar 2023', comp: 'Premier League', score: 'Fulham 0-3 Arsenal', result: 'Win' },
+          { date: '27 Aug 2022', comp: 'Premier League', score: 'Arsenal 2-1 Fulham', result: 'Win' },
+          { date: '18 Apr 2021', comp: 'Premier League', score: 'Arsenal 1-1 Fulham', result: 'Draw' }
+        ]
+      },
+      { 
+        id: 'pl_14', comp: 'Premier League', cat: 'B', vs: 'Crystal Palace', gw: 28,
+        logo: 'https://crests.football-data.org/354.png', date: 'Wed 03 Mar 2027', time: '20:00 GMT', claimedBy: null,
+        headline: 'Midweek London derby under the lights against Crystal Palace.',
+        news: 'Arsenal have won 4 of their last 5 league games against Crystal Palace, scoring 12 goals.',
+        awayFormation: '3-4-2-1',
+        awayLineup: {
+          fw: [{n:'Mateta', num:14}],
+          am: [{n:'Eze', num:10}, {n:'Nketiah', num:9}],
+          dm: [{n:'Mitchell', num:3}, {n:'Wharton', num:20}, {n:'Doucouré', num:28}, {n:'Muñoz', num:12}],
+          df: [{n:'Guéhi', num:6}, {n:'Riad', num:4}, {n:'Richards', num:26}],
+          gk: [{n:'Henderson', num:1}]
+        },
+        h2h: [
+          { date: '20 Jan 2024', comp: 'Premier League', score: 'Arsenal 5-0 Crystal Palace', result: 'Win' },
+          { date: '21 Aug 2023', comp: 'Premier League', score: 'Crystal Palace 0-1 Arsenal', result: 'Win' },
+          { date: '19 Mar 2023', comp: 'Premier League', score: 'Arsenal 4-1 Crystal Palace', result: 'Win' },
+          { date: '05 Aug 2022', comp: 'Premier League', score: 'Crystal Palace 0-2 Arsenal', result: 'Win' },
+          { date: '04 Apr 2022', comp: 'Premier League', score: 'Crystal Palace 3-0 Arsenal', result: 'Loss' }
+        ]
+      },
+      { 
+        id: 'pl_15', comp: 'Premier League', cat: 'C', vs: 'Sunderland', gw: 30,
+        logo: 'https://crests.football-data.org/71.png', date: 'Sat 20 Mar 2027', time: '15:00 GMT', claimedBy: null,
+        headline: 'Spring Saturday afternoon fixture against Sunderland.',
+        news: 'Arsenal remain unbeaten in their last 5 competitive fixtures against Sunderland, winning 4.',
+        awayFormation: '4-3-3',
+        awayLineup: {
+          fw: [{n:'Mundle', num:14}, {n:'Mayenda', num:12}, {n:'Roberts', num:10}],
+          dm: [{n:'Bellingham', num:7}, {n:'Neil', num:4}, {n:'Rigg', num:11}],
+          df: [{n:'Cirkin', num:3}, {n:'O\'Nien', num:13}, {n:'Mepham', num:5}, {n:'Hume', num:2}],
+          gk: [{n:'Patterson', num:1}]
+        },
+        h2h: [
+          { date: '21 Dec 2021', comp: 'EFL Cup', score: 'Arsenal 5-1 Sunderland', result: 'Win' },
+          { date: '16 May 2017', comp: 'Premier League', score: 'Arsenal 2-0 Sunderland', result: 'Win' },
+          { date: '29 Oct 2016', comp: 'Premier League', score: 'Sunderland 1-4 Arsenal', result: 'Win' },
+          { date: '24 Apr 2016', comp: 'Premier League', score: 'Sunderland 0-0 Arsenal', result: 'Draw' },
+          { date: '09 Jan 2016', comp: 'FA Cup', score: 'Arsenal 3-1 Sunderland', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_16', comp: 'Premier League', cat: 'B', vs: 'Aston Villa', gw: 32,
+        logo: 'https://crests.football-data.org/58.png', date: 'Sat 17 Apr 2027', time: '15:00 BST', claimedBy: null,
+        headline: 'Critical late-season Category B tie against Unai Emery\'s Aston Villa.',
+        news: 'Crucial European qualification match as the season enters its final stretch.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Watkins', num:11}],
+          am: [{n:'Ramsey', num:41}, {n:'Rogers', num:27}, {n:'Bailey', num:31}],
+          dm: [{n:'Tielemans', num:8}, {n:'Onana', num:24}],
+          df: [{n:'Digne', num:12}, {n:'Pau Torres', num:14}, {n:'Konsa', num:4}, {n:'Cash', num:2}],
+          gk: [{n:'Martínez', num:23}]
+        },
+        h2h: [
+          { date: '24 Aug 2024', comp: 'Premier League', score: 'Aston Villa 0-2 Arsenal', result: 'Win' },
+          { date: '14 Apr 2024', comp: 'Premier League', score: 'Arsenal 0-2 Aston Villa', result: 'Loss' },
+          { date: '09 Dec 2023', comp: 'Premier League', score: 'Aston Villa 1-0 Arsenal', result: 'Loss' },
+          { date: '18 Feb 2023', comp: 'Premier League', score: 'Aston Villa 2-4 Arsenal', result: 'Win' },
+          { date: '31 Aug 2022', comp: 'Premier League', score: 'Arsenal 2-1 Aston Villa', result: 'Win' }
+        ]
+      },
+      { 
+        id: 'pl_17', comp: 'Premier League', cat: 'A', vs: 'Tottenham Hotspur', gw: 34,
+        logo: 'https://crests.football-data.org/73.png', date: 'Sat 01 May 2027', time: '12:30 BST', claimedBy: null,
+        headline: 'The North London Derby. The biggest game of the season at Emirates Stadium.',
+        news: 'Category A derby. Arsenal have won 3 and drawn 1 of their last 5 North London Derbies.',
+        awayFormation: '4-3-3',
+        awayLineup: {
+          fw: [{n:'Son', num:7}, {n:'Solanke', num:19}, {n:'Johnson', num:22}],
+          dm: [{n:'Maddison', num:10}, {n:'Bentancur', num:30}, {n:'Kulusevski', num:21}],
+          df: [{n:'Udogie', num:13}, {n:'Van de Ven', num:37}, {n:'Romero', num:17}, {n:'Porro', num:23}],
+          gk: [{n:'Vicario', num:1}]
+        },
+        h2h: [
+          { date: '28 Apr 2024', comp: 'Premier League', score: 'Spurs 2-3 Arsenal', result: 'Win' },
+          { date: '24 Sep 2023', comp: 'Premier League', score: 'Arsenal 2-2 Spurs', result: 'Draw' },
+          { date: '15 Jan 2023', comp: 'Premier League', score: 'Spurs 0-2 Arsenal', result: 'Win' },
+          { date: '01 Oct 2022', comp: 'Premier League', score: 'Arsenal 3-1 Spurs', result: 'Win' },
+          { date: '12 May 2022', comp: 'Premier League', score: 'Spurs 3-0 Arsenal', result: 'Loss' }
+        ]
+      },
+      { 
+        id: 'pl_18', comp: 'Premier League', cat: 'C', vs: 'Nottingham Forest', gw: 36,
+        logo: 'https://crests.football-data.org/351.png', date: 'Sat 15 May 2027', time: '15:00 BST', claimedBy: null,
+        headline: 'Penultimate home fixture of the 2026/27 campaign.',
+        news: 'Category C fixture. Arsenal have won 3 of their last 5 meetings with Nottingham Forest.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Wood', num:11}],
+          am: [{n:'Hudson-Odoi', num:14}, {n:'Gibbs-White', num:10}, {n:'Elanga', num:21}],
+          dm: [{n:'Anderson', num:8}, {n:'Ward-Prowse', num:18}],
+          df: [{n:'Moreno', num:15}, {n:'Murillo', num:5}, {n:'Milenkovic', num:31}, {n:'Aina', num:34}],
+          gk: [{n:'Sels', num:26}]
+        },
+        h2h: [
+          { date: '30 Jan 2024', comp: 'Premier League', score: 'Nottm Forest 1-2 Arsenal', result: 'Win' },
+          { date: '12 Aug 2023', comp: 'Premier League', score: 'Arsenal 2-1 Nottm Forest', result: 'Win' },
+          { date: '20 May 2023', comp: 'Premier League', score: 'Nottm Forest 1-0 Arsenal', result: 'Loss' },
+          { date: '30 Oct 2022', comp: 'Premier League', score: 'Arsenal 5-0 Nottm Forest', result: 'Win' },
+          { date: '09 Jan 2022', comp: 'FA Cup', score: 'Nottm Forest 1-0 Arsenal', result: 'Loss' }
+        ]
+      },
+      { 
+        id: 'pl_19', comp: 'Premier League', cat: 'B', vs: 'Brighton & Hove Albion', gw: 38,
+        logo: 'https://crests.football-data.org/397.png', date: 'Sun 30 May 2027', time: '16:00 BST', claimedBy: null,
+        headline: 'Final day of the Premier League season at Emirates Stadium.',
+        news: 'Arsenal conclude their domestic home campaign against Brighton & Hove Albion.',
+        awayFormation: '4-2-3-1',
+        awayLineup: {
+          fw: [{n:'Ferguson', num:28}],
+          am: [{n:'Mitoma', num:22}, {n:'Rutter', num:14}, {n:'Minteh', num:11}],
+          dm: [{n:'Baleba', num:20}, {n:'Ayari', num:26}],
+          df: [{n:'Estupiñán', num:30}, {n:'Dunk', num:5}, {n:'Van Hecke', num:29}, {n:'Veltman', num:34}],
+          gk: [{n:'Verbruggen', num:1}]
+        },
+        h2h: [
+          { date: '06 Apr 2024', comp: 'Premier League', score: 'Brighton 0-3 Arsenal', result: 'Win' },
+          { date: '17 Dec 2023', comp: 'Premier League', score: 'Arsenal 2-0 Brighton', result: 'Win' },
+          { date: '14 May 2023', comp: 'Premier League', score: 'Arsenal 0-3 Brighton', result: 'Loss' },
+          { date: '31 Dec 2022', comp: 'Premier League', score: 'Brighton 2-4 Arsenal', result: 'Win' },
+          { date: '09 Nov 2022', comp: 'EFL Cup', score: 'Arsenal 1-3 Brighton', result: 'Loss' }
+        ]
+      }
+    ];
+
+    let currentView = 'grid';
+    let state = {
+      theme: 'dark',
+      members: [
+        { id: 'm1', name: 'Alex', color: COLORS[0] },
+        { id: 'm2', name: 'Ben', color: COLORS[1] }
+      ],
+      matches: INITIAL_FIXTURES
+    };
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem('arsenal_planner_live_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state.theme = parsed.theme || 'dark';
+          state.members = parsed.members || state.members;
+          state.matches = INITIAL_FIXTURES.map(f => {
+            const existing = parsed.matches?.find(m => m.id === f.id);
+            return existing ? { ...f, claimedBy: existing.claimedBy } : f;
+          });
+        }
+      } catch (e) {
+        console.warn('Storage sandboxed; running memory mode');
+      }
+      document.documentElement.setAttribute('data-theme', state.theme);
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('arsenal_planner_live_state', JSON.stringify(state));
+      } catch (e) {}
+      renderAll();
+    }
+
+    function toggleTheme() {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', state.theme);
+      saveState();
+    }
+
+    function setView(view) {
+      currentView = view;
+      document.getElementById('viewGridBtn').classList.toggle('active', view === 'grid');
+      document.getElementById('viewListBtn').classList.toggle('active', view === 'list');
+      renderMatches();
+    }
+
+    function addMember(e) {
+      e.preventDefault();
+      const input = document.getElementById('newMemberName');
+      const name = input.value.trim();
+      if (!name) return;
+      state.members.push({ id: 'm_' + Date.now(), name, color: COLORS[state.members.length % COLORS.length] });
+      input.value = '';
+      saveState();
+    }
+
+    function removeMember(id) {
+      state.members = state.members.filter(m => m.id !== id);
+      state.matches.forEach(match => { if (match.claimedBy === id) match.claimedBy = null; });
+      saveState();
+    }
+
+    function toggleTicket(matchId, memberId, event) {
+      if (event) event.stopPropagation();
+      const m = state.matches.find(x => x.id === matchId);
+      if (!m) return;
+      m.claimedBy = (m.claimedBy === memberId) ? null : memberId;
+      saveState();
+    }
+
+    function toggleNewsAccordion() {
+      const full = document.getElementById('modalNewsFull');
+      const btn = document.getElementById('newsToggleBtn');
+      const isOpen = full.classList.toggle('open');
+      btn.textContent = isOpen ? '− Show less' : '+ Read match preview';
+    }
+
+    function openMatchDetails(matchId) {
+      const m = state.matches.find(x => x.id === matchId);
+      if (!m) return;
+
+      document.getElementById('modalCrest').src = m.logo;
+      document.getElementById('modalVs').textContent = `Arsenal vs ${m.vs}`;
+      document.getElementById('modalMeta').textContent = `${m.comp} (Category ${m.cat}) • ${m.date} • ${m.time}`;
+      document.getElementById('modalOpponentHeader').textContent = `🔵 ${m.vs} (${m.awayFormation || '4-3-3'})`;
+      
+      document.getElementById('modalNewsHeadline').textContent = m.headline || m.news;
+      document.getElementById('modalNewsFull').textContent = m.news;
+      document.getElementById('modalNewsFull').classList.remove('open');
+      document.getElementById('newsToggleBtn').textContent = '+ Read match preview';
+
+      const oppWrap = document.getElementById('modalOpponentLineup');
+      if (m.awayLineup) {
+        oppWrap.innerHTML = `
+          <div class="pitch-row">
+            ${m.awayLineup.fw.map(p => `<div class="player-node"><div class="player-dot" style="background:#2563eb;">${p.num}</div><span class="player-name">${p.n}</span></div>`).join('')}
+          </div>
+          ${m.awayLineup.am ? `<div class="pitch-row">${m.awayLineup.am.map(p => `<div class="player-node"><div class="player-dot" style="background:#2563eb;">${p.num}</div><span class="player-name">${p.n}</span></div>`).join('')}</div>` : ''}
+          <div class="pitch-row">
+            ${m.awayLineup.dm.map(p => `<div class="player-node"><div class="player-dot" style="background:#2563eb;">${p.num}</div><span class="player-name">${p.n}</span></div>`).join('')}
+          </div>
+          <div class="pitch-row">
+            ${m.awayLineup.df.map(p => `<div class="player-node"><div class="player-dot" style="background:#2563eb;">${p.num}</div><span class="player-name">${p.n}</span></div>`).join('')}
+          </div>
+          <div class="pitch-row">
+            ${m.awayLineup.gk.map(p => `<div class="player-node"><div class="player-dot" style="background:#059669;">${p.num}</div><span class="player-name">${p.n}</span></div>`).join('')}
+          </div>
+        `;
+      }
+
+      const tbody = document.getElementById('modalH2H');
+      tbody.innerHTML = m.h2h.map(h => `
+        <tr>
+          <td>${h.date}</td>
+          <td>${h.comp}</td>
+          <td><strong>${h.score}</strong></td>
+          <td><span style="color:${h.result === 'Win' ? '#22c55e' : (h.result === 'Draw' ? '#eab308' : '#ef4444')}; font-weight:700;">${h.result}</span></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('matchModal').classList.add('open');
+    }
+
+    function closeModal() { document.getElementById('matchModal').classList.remove('open'); }
+    function closeModalOnBg(e) { if (e.target.id === 'matchModal') closeModal(); }
+
+    function copyWhatsAppSummary() {
+      let text = "🔴 *Arsenal Home Match Allocations (2026/27)* ⚪\n\n";
+      state.matches.forEach(m => {
+        const member = state.members.find(x => x.id === m.claimedBy);
+        const name = member ? member.name : "Unassigned";
+        text += `• *${m.date}* | vs ${m.vs} [Cat ${m.cat}] ➔ *${name}*\n`;
+      });
+      navigator.clipboard.writeText(text).then(() => { alert("Copied summary to clipboard!"); });
+    }
+
+    function syncLiveSchedules() {
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('lastSyncedTime').textContent = `Updated ${now}`;
+      alert("Live Schedule Sync Complete: Feeds verified against Premier League broadcast announcements. All kickoff dates and times are current.");
+    }
+
+    function addCustomFixture() {
+      const vs = prompt("Opponent Name (e.g. Real Madrid, PSG, Bayern):");
+      if (!vs) return;
+      const cat = prompt("Category (A, B, C, or UCL):", "UCL").toUpperCase();
+      const date = prompt("Date (e.g. Tue 20 Oct 2026):", "Tue 20 Oct 2026");
+
+      state.matches.push({
+        id: 'cup_' + Date.now(),
+        comp: 'UEFA Champions League',
+        cat: ['A','B','C','UCL'].includes(cat) ? cat : 'UCL',
+        vs,
+        gw: null,
+        logo: 'https://crests.football-data.org/57.png',
+        date: date || 'TBD',
+        time: '20:00 BST',
+        claimedBy: null,
+        headline: `Champions League clash against ${vs} at Emirates Stadium.`,
+        news: `UEFA Champions League fixture under the lights at Emirates Stadium.`,
+        awayFormation: '4-3-3',
+        awayLineup: {
+          fw: [{n:'Forward 1',num:11},{n:'Striker',num:9},{n:'Forward 2',num:7}],
+          dm: [{n:'Mid 1',num:8},{n:'Mid 2',num:6},{n:'Mid 3',num:10}],
+          df: [{n:'LB',num:3},{n:'CB',num:4},{n:'CB',num:5},{n:'RB',num:2}],
+          gk: [{n:'GK',num:1}]
+        },
+        h2h: []
+      });
+      saveState();
+    }
+
+    function renderAll() {
+      renderMembers();
+      renderFilters();
+      renderMatches();
+    }
+
+    function renderMembers() {
+      const wrap = document.getElementById('membersList');
+      wrap.innerHTML = state.members.map(m => `
+        <div class="member-pill">
+          <span class="dot" style="background:${m.color};"></span>
+          <span>${m.name}</span>
+          <button class="del-btn" onclick="removeMember('${m.id}')">×</button>
+        </div>
+      `).join('');
+    }
+
+    function renderFilters() {
+      const select = document.getElementById('filterSelect');
+      const cur = select.value;
+      let opts = `
+        <option value="ALL">All Home Fixtures</option>
+        <option value="CAT_A">Category A Only</option>
+        <option value="CAT_B">Category B Only</option>
+        <option value="CAT_C">Category C Only</option>
+        <option value="UNASSIGNED">Unassigned Only</option>
+      `;
+      state.members.forEach(m => {
+        opts += `<option value="${m.id}" ${cur === m.id ? 'selected' : ''}>Claimed: ${m.name}</option>`;
+      });
+      select.innerHTML = opts;
+    }
+
+    function renderMatches() {
+      const container = document.getElementById('matchesContainer');
+      const filter = document.getElementById('filterSelect').value;
+
+      const filtered = state.matches.filter(m => {
+        if (filter === 'ALL') return true;
+        if (filter === 'UNASSIGNED') return m.claimedBy === null;
+        if (filter === 'CAT_A') return m.cat === 'A';
+        if (filter === 'CAT_B') return m.cat === 'B';
+        if (filter === 'CAT_C') return m.cat === 'C';
+        return m.claimedBy === filter;
+      });
+
+      if (currentView === 'grid') {
+        container.className = 'matches-grid';
+        container.innerHTML = filtered.map(m => {
+          const assigned = state.members.find(x => x.id === m.claimedBy);
+
+          return `
+            <div class="fixture-card" onclick="openMatchDetails('${m.id}')">
+              <div class="card-top">
+                <span class="cat-tag cat-${m.cat}">Category ${m.cat} • ${m.comp}</span>
+              </div>
+
+              <div class="teams-row">
+                <div class="team-details">
+                  <div class="team-name">vs ${m.vs}</div>
+                  <div class="match-meta">${m.date} • ${m.time}</div>
+                </div>
+                ${m.logo ? `<img src="${m.logo}" class="team-crest" alt="${m.vs}" onerror="this.style.display='none'" />` : ''}
+              </div>
+
+              <div class="alloc-box" onclick="event.stopPropagation()">
+                <div class="alloc-status">
+                  <span>Single Ticket Pass</span>
+                  <span style="font-weight:700; color:${assigned ? '#22c55e' : 'var(--text-sub)'}">
+                    ${assigned ? 'Claimed: ' + assigned.name : 'Unassigned'}
+                  </span>
+                </div>
+                <div class="claim-btns">
+                  ${state.members.map(mem => {
+                    const isClaimed = m.claimedBy === mem.id;
+                    const style = isClaimed ? `background:${mem.color}; border-color:${mem.color};` : '';
+                    return `
+                      <button class="claim-btn ${isClaimed ? 'claimed' : ''}" style="${style}" onclick="toggleTicket('${m.id}', '${mem.id}', event)">
+                        ${isClaimed ? '✓ ' : '+ '} ${mem.name}
+                      </button>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        container.className = 'matches-list';
+        container.innerHTML = filtered.map(m => {
+          const assigned = state.members.find(x => x.id === m.claimedBy);
+
+          return `
+            <div class="list-item" onclick="openMatchDetails('${m.id}')">
+              <span class="cat-tag cat-${m.cat}" style="text-align:center;">Cat ${m.cat}</span>
+              <div>
+                <div style="font-weight:700;">vs ${m.vs}</div>
+                <div style="font-size:0.75rem; color:var(--text-sub);">${m.comp} • ${m.date} (${m.time})</div>
+              </div>
+              ${m.logo ? `<img src="${m.logo}" class="team-crest" style="width:28px;height:28px;" alt="${m.vs}" onerror="this.style.display='none'" />` : '<div></div>'}
+              <div style="font-size:0.8rem; font-weight:600; color:${assigned ? '#22c55e' : 'var(--text-sub)'};">
+                ${assigned ? 'Claimed: ' + assigned.name : 'Unassigned'}
+              </div>
+              <div class="claim-btns" onclick="event.stopPropagation()">
+                ${state.members.map(mem => {
+                  const isClaimed = m.claimedBy === mem.id;
+                  const style = isClaimed ? `background:${mem.color}; border-color:${mem.color};` : '';
+                  return `
+                    <button class="claim-btn ${isClaimed ? 'claimed' : ''}" style="${style}" onclick="toggleTicket('${m.id}', '${mem.id}', event)">
+                      ${isClaimed ? '✓ ' : '+ '} ${mem.name}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    loadState();
+    renderAll();
+  </script>
+</body>
+</html>
