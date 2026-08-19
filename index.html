@@ -83,8 +83,6 @@
     .btn-secondary:hover { background: rgba(255,255,255,0.25); }
     .btn-wa { background: #25d366; color: #000; font-weight: 700; }
     .btn-wa:hover { background: #20ba5a; }
-    .btn-sync { background: #3b82f6; color: #fff; font-weight: 700; }
-    .btn-sync:hover { background: #2563eb; }
 
     /* Nav Tabs */
     .nav-tabs { display: flex; gap: 8px; border-bottom: 2px solid var(--card-border); padding-bottom: 8px; }
@@ -166,11 +164,7 @@
     }
 
     /* Next Match Countdown */
-    .next-match-box {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .next-match-box { display: flex; flex-direction: column; gap: 6px; }
     .next-match-header { display: flex; justify-content: space-between; align-items: center; }
     .next-match-title { font-size: 0.95rem; font-weight: 700; }
     .countdown-grid {
@@ -191,17 +185,9 @@
     .countdown-lbl { font-size: 0.65rem; color: var(--text-sub); text-transform: uppercase; }
 
     /* Mini Table Snapshot */
-    .mini-table-box {
-      cursor: pointer;
-      transition: border-color 0.15s;
-    }
+    .mini-table-box { cursor: pointer; transition: border-color 0.15s; }
     .mini-table-box:hover { border-color: var(--cat-b); }
-    .mini-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.76rem;
-      margin-top: 4px;
-    }
+    .mini-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; margin-top: 4px; }
     .mini-table th, .mini-table td { padding: 4px 6px; text-align: left; }
     .mini-table th { color: var(--text-sub); font-size: 0.68rem; text-transform: uppercase; }
     .mini-table tr.highlight { background: rgba(219, 0, 7, 0.1); font-weight: 700; border-radius: 4px; }
@@ -421,7 +407,6 @@
         </div>
       </div>
       <div class="header-btns">
-        <button class="btn btn-sync" onclick="syncLiveSchedules()">🔄 Sync Schedule</button>
         <button class="btn btn-secondary" onclick="toggleTheme()">🌓 Light/Dark</button>
         <button class="btn btn-wa" onclick="copyWhatsAppSummary()">💬 WhatsApp</button>
       </div>
@@ -435,7 +420,6 @@
 
     <!-- MAIN VIEW: FIXTURES -->
     <div id="viewFixtures" style="display:flex; flex-direction:column; gap:14px;">
-      <!-- Top 3-Column Dashboard: Members | Next Match Countdown | Mini Table -->
       <div class="top-dashboard">
         <!-- 1. Members -->
         <div class="dashboard-card">
@@ -447,7 +431,7 @@
           </form>
         </div>
 
-        <!-- 2. Next Match Countdown (Blue Box) -->
+        <!-- 2. Next Match Countdown -->
         <div class="dashboard-card" id="nextMatchCard">
           <h2>Next Match Kickoff</h2>
           <div class="next-match-box">
@@ -465,7 +449,7 @@
           </div>
         </div>
 
-        <!-- 3. Mini League Table (Red Box) -->
+        <!-- 3. Mini League Table -->
         <div class="dashboard-card mini-table-box" onclick="openFullTableModal()">
           <h2>
             <span>2026/27 PL Table</span>
@@ -499,16 +483,13 @@
         <button class="btn btn-secondary" onclick="addCustomFixture()">+ Add UCL / Cup Tie</button>
       </div>
 
-      <!-- Fixtures Grid/List -->
       <div id="matchesContainer"></div>
     </div>
 
     <!-- MAIN VIEW: STATS & ATTENDANCE -->
     <div id="viewStats" style="display: none; flex-direction:column; gap:16px;">
-      <!-- Total Tallies -->
       <div class="stats-tally-grid" id="statsTalliesGrid"></div>
 
-      <!-- Member Breakdown Table -->
       <div class="panel">
         <h2 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-sub); letter-spacing:1px; margin-bottom:10px;">Attendee Allocation Summary</h2>
         <table class="stats-table">
@@ -526,7 +507,6 @@
         </table>
       </div>
 
-      <!-- Full Match-by-Match Attendee Log -->
       <div class="panel">
         <h2 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-sub); letter-spacing:1px; margin-bottom:10px;">Who Is Going to Which Match</h2>
         <table class="stats-table">
@@ -545,7 +525,7 @@
     </div>
   </div>
 
-  <!-- Modal: Full 2026/27 Premier League Table -->
+  <!-- Modal: Full 2026/27 Table -->
   <div id="fullTableModal" class="modal-overlay" onclick="closeTableModalOnBg(event)">
     <div class="modal-card" style="max-width:650px;">
       <div class="modal-header">
@@ -564,7 +544,7 @@
     </div>
   </div>
 
-  <!-- Modal: Match Details & Pitch Formation -->
+  <!-- Modal: Match Details & Pitch -->
   <div id="matchModal" class="modal-overlay" onclick="closeModalOnBg(event)">
     <div class="modal-card">
       <div class="modal-header">
@@ -578,7 +558,6 @@
         <button class="modal-close" onclick="closeModal()">×</button>
       </div>
 
-      <!-- Expandable Headline & News Section -->
       <div class="news-accordion">
         <div class="news-headline" id="modalNewsHeadline"></div>
         <div style="font-size:0.78rem; color:var(--text-sub);">Venue: Emirates Stadium • Broadcast: Sky Sports / TNT Sports</div>
@@ -586,7 +565,6 @@
         <div class="news-collapsed" id="modalNewsFull"></div>
       </div>
 
-      <!-- Tactical Formations Directly Underneath News -->
       <div class="pitch-duo">
         <div class="pitch-wrapper">
           <div class="pitch-header">🔴 Arsenal (4-3-3)</div>
@@ -619,7 +597,6 @@
         </div>
       </div>
 
-      <!-- Last 5 Head to Head -->
       <div style="display:flex; flex-direction:column; gap:8px;">
         <h2 style="font-size:0.8rem; text-transform:uppercase; color:var(--text-sub); letter-spacing:1px;">⚔️ Last 5 Head-to-Head Meetings</h2>
         <table class="stats-table">
@@ -632,7 +609,25 @@
     </div>
   </div>
 
-  <script>
+  <!-- LIVE FIREBASE SYNC & CLIENT SCRIPT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBi69vvdcWs2DR3tH6LRhyRDSZWpmPxdb8",
+      authDomain: "arsenal-ticket-planner.firebaseapp.com",
+      projectId: "arsenal-ticket-planner",
+      storageBucket: "arsenal-ticket-planner.firebasestorage.app",
+      messagingSenderId: "878102764897",
+      appId: "1:878102764897:web:644fef026d986d8c00f920",
+      measurementId: "G-M2KVXHF2T3"
+    };
+
+    const fbApp = initializeApp(firebaseConfig);
+    const db = getFirestore(fbApp);
+    const docRef = doc(db, "app_state", "season_2026_2027");
+
     const COLORS = ['#db0007', '#2563eb', '#059669', '#d97706', '#9333ea', '#ec4899'];
 
     const PREM_STANDINGS_2627 = [
@@ -663,415 +658,37 @@
         id: 'pl_1', comp: 'Premier League', cat: 'C', vs: 'Coventry City', gw: 1,
         kickoffTimestamp: new Date('2026-08-21T20:00:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/1076.png', date: 'Fri 21 Aug 2026', time: '20:00 BST', claimedBy: null,
-        headline: 'Arsenal host Coventry City in the 2026/27 Premier League season opener under the Friday lights.',
-        news: 'Opening Friday night fixture of the campaign at Emirates Stadium. Coventry City return to top-flight football seeking their first league victory over the Gunners since the 1999/2000 season.',
+        headline: 'Arsenal host Coventry City in the 2026/27 Premier League opener.',
+        news: 'Opening Friday night fixture of the campaign at Emirates Stadium.',
         awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Simms', num:9}],
-          am: [{n:'Mason-Clark', num:10}, {n:'Rudoni', num:5}, {n:'Sakamoto', num:7}],
-          dm: [{n:'Torp', num:29}, {n:'Grimes', num:6}],
-          df: [{n:'Dasilva', num:3}, {n:'Kitching', num:15}, {n:'Thomas', num:4}, {n:'van Ewijk', num:27}],
-          gk: [{n:'Rushworth', num:19}]
-        },
-        h2h: [
-          { date: '24 Jan 2014', comp: 'FA Cup', score: 'Arsenal 4-0 Coventry', result: 'Win' },
-          { date: '26 Sep 2012', comp: 'League Cup', score: 'Arsenal 6-1 Coventry', result: 'Win' },
-          { date: '03 Feb 2001', comp: 'Premier League', score: 'Coventry 0-1 Arsenal', result: 'Win' },
-          { date: '16 Sep 2000', comp: 'Premier League', score: 'Arsenal 2-1 Coventry', result: 'Win' },
-          { date: '26 Mar 2000', comp: 'Premier League', score: 'Arsenal 3-0 Coventry', result: 'Win' }
-        ]
+        awayLineup: { fw: [{n:'Simms', num:9}], am: [{n:'Mason-Clark', num:10}, {n:'Rudoni', num:5}, {n:'Sakamoto', num:7}], dm: [{n:'Torp', num:29}, {n:'Grimes', num:6}], df: [{n:'Dasilva', num:3}, {n:'Kitching', num:15}, {n:'Thomas', num:4}, {n:'van Ewijk', num:27}], gk: [{n:'Rushworth', num:19}] },
+        h2h: [{ date: '24 Jan 2014', comp: 'FA Cup', score: 'Arsenal 4-0 Coventry', result: 'Win' }, { date: '26 Sep 2012', comp: 'League Cup', score: 'Arsenal 6-1 Coventry', result: 'Win' }, { date: '03 Feb 2001', comp: 'Premier League', score: 'Coventry 0-1 Arsenal', result: 'Win' }, { date: '16 Sep 2000', comp: 'Premier League', score: 'Arsenal 2-1 Coventry', result: 'Win' }, { date: '26 Mar 2000', comp: 'Premier League', score: 'Arsenal 3-0 Coventry', result: 'Win' }]
       },
       { 
         id: 'pl_2', comp: 'Premier League', cat: 'A', vs: 'Chelsea', gw: 4,
         kickoffTimestamp: new Date('2026-09-06T16:30:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/61.png', date: 'Sun 06 Sep 2026', time: '16:30 BST', claimedBy: null,
-        headline: 'Massive early London derby at Emirates Stadium with huge title momentum at stake.',
-        news: 'Category A London Derby. Arsenal enter having dominated recent encounters, winning 4 of the last 5 competitive meetings across the Premier League and EFL Cup semi-finals.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'João Pedro', num:20}],
-          am: [{n:'Neto', num:7}, {n:'Palmer', num:10}, {n:'Rogers', num:17}],
-          dm: [{n:'Caicedo', num:25}, {n:'Enzo', num:8}],
-          df: [{n:'Hato', num:21}, {n:'Colwill', num:6}, {n:'Fofana', num:29}, {n:'James', num:24}],
-          gk: [{n:'Sánchez', num:1}]
-        },
-        h2h: [
-          { date: '01 Mar 2026', comp: 'Premier League', score: 'Arsenal 2-1 Chelsea', result: 'Win' },
-          { date: '03 Feb 2026', comp: 'EFL Cup Semi', score: 'Arsenal 1-0 Chelsea', result: 'Win' },
-          { date: '14 Jan 2026', comp: 'EFL Cup Semi', score: 'Chelsea 2-3 Arsenal', result: 'Win' },
-          { date: '30 Nov 2025', comp: 'Premier League', score: 'Chelsea 1-1 Arsenal', result: 'Draw' },
-          { date: '16 Mar 2025', comp: 'Premier League', score: 'Arsenal 1-0 Chelsea', result: 'Win' }
-        ]
+        headline: 'London derby at Emirates Stadium.', news: 'Category A London Derby.', awayFormation: '4-2-3-1',
+        awayLineup: { fw: [{n:'João Pedro', num:20}], am: [{n:'Neto', num:7}, {n:'Palmer', num:10}, {n:'Rogers', num:17}], dm: [{n:'Caicedo', num:25}, {n:'Enzo', num:8}], df: [{n:'Hato', num:21}, {n:'Colwill', num:6}, {n:'Fofana', num:29}, {n:'James', num:24}], gk: [{n:'Sánchez', num:1}] },
+        h2h: [{ date: '01 Mar 2026', comp: 'Premier League', score: 'Arsenal 2-1 Chelsea', result: 'Win' }, { date: '03 Feb 2026', comp: 'EFL Cup Semi', score: 'Arsenal 1-0 Chelsea', result: 'Win' }, { date: '14 Jan 2026', comp: 'EFL Cup Semi', score: 'Chelsea 2-3 Arsenal', result: 'Win' }, { date: '30 Nov 2025', comp: 'Premier League', score: 'Chelsea 1-1 Arsenal', result: 'Draw' }, { date: '16 Mar 2025', comp: 'Premier League', score: 'Arsenal 1-0 Chelsea', result: 'Win' }]
       },
-      { 
-        id: 'pl_3', comp: 'Premier League', cat: 'C', vs: 'Leeds United', gw: 8,
-        kickoffTimestamp: new Date('2026-10-10T12:30:00+01:00').getTime(),
-        logo: 'https://crests.football-data.org/341.png', date: 'Sat 10 Oct 2026', time: '12:30 BST', claimedBy: null,
-        headline: 'Early Saturday lunchtime kickoff as Leeds United travel to North London.',
-        news: 'Arsenal have won 5 consecutive matches against Leeds United across all competitions, scoring 16 goals while conceding just 2.',
-        awayFormation: '4-3-3',
-        awayLineup: {
-          fw: [{n:'Gnonto', num:29}, {n:'Piroe', num:10}, {n:'James', num:7}],
-          dm: [{n:'Ampadu', num:4}, {n:'Tanaka', num:22}, {n:'Gruev', num:8}],
-          df: [{n:'Firpo', num:3}, {n:'Struijk', num:5}, {n:'Rodon', num:6}, {n:'Bogle', num:2}],
-          gk: [{n:'Meslier', num:1}]
-        },
-        h2h: [
-          { date: '31 Jan 2026', comp: 'Premier League', score: 'Leeds 0-4 Arsenal', result: 'Win' },
-          { date: '23 Aug 2025', comp: 'Premier League', score: 'Arsenal 5-0 Leeds', result: 'Win' },
-          { date: '01 Apr 2023', comp: 'Premier League', score: 'Arsenal 4-1 Leeds', result: 'Win' },
-          { date: '16 Oct 2022', comp: 'Premier League', score: 'Leeds 0-1 Arsenal', result: 'Win' },
-          { date: '08 May 2022', comp: 'Premier League', score: 'Arsenal 2-1 Leeds', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_4', comp: 'Premier League', cat: 'B', vs: 'Everton', gw: 9,
-        kickoffTimestamp: new Date('2026-10-24T15:00:00+01:00').getTime(),
-        logo: 'https://crests.football-data.org/62.png', date: 'Sat 24 Oct 2026', time: '15:00 BST', claimedBy: null,
-        headline: 'Category B league clash with Arsenal protecting a strong home record against the Toffees.',
-        news: 'Traditional 3pm Saturday kickoff at Emirates Stadium. Arsenal have won 4 of their last 5 fixtures against Everton.',
-        awayFormation: '4-4-1-1',
-        awayLineup: {
-          fw: [{n:'Calvert-Lewin', num:9}],
-          am: [{n:'Ndiaye', num:10}],
-          dm: [{n:'McNeil', num:7}, {n:'Gueye', num:27}, {n:'Garner', num:37}, {n:'Harrison', num:11}],
-          df: [{n:'Mykolenko', num:19}, {n:'Branthwaite', num:32}, {n:'Tarkowski', num:6}, {n:'Coleman', num:23}],
-          gk: [{n:'Pickford', num:1}]
-        },
-        h2h: [
-          { date: '19 May 2024', comp: 'Premier League', score: 'Arsenal 2-1 Everton', result: 'Win' },
-          { date: '17 Sep 2023', comp: 'Premier League', score: 'Everton 0-1 Arsenal', result: 'Win' },
-          { date: '01 Mar 2023', comp: 'Premier League', score: 'Arsenal 4-0 Everton', result: 'Win' },
-          { date: '04 Feb 2023', comp: 'Premier League', score: 'Everton 1-0 Arsenal', result: 'Loss' },
-          { date: '22 May 2022', comp: 'Premier League', score: 'Arsenal 5-1 Everton', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_5', comp: 'Premier League', cat: 'C', vs: 'Hull City', gw: 11,
-        kickoffTimestamp: new Date('2026-11-07T15:00:00Z').getTime(),
-        logo: 'https://crests.football-data.org/322.png', date: 'Sat 07 Nov 2026', time: '15:00 GMT', claimedBy: null,
-        headline: 'Hull City visit Emirates Stadium ahead of the November international break.',
-        news: 'Category C fixture. Arsenal have won 4 and drawn 1 of their last 5 competitive fixtures against Hull City.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Bedia', num:9}],
-          am: [{n:'Belloumi', num:7}, {n:'Omur', num:10}, {n:'Kamara', num:11}],
-          dm: [{n:'Slater', num:27}, {n:'Zambrano', num:18}],
-          df: [{n:'Giles', num:3}, {n:'Jones', num:5}, {n:'Hughes', num:6}, {n:'Coyle', num:2}],
-          gk: [{n:'Pandur', num:1}]
-        },
-        h2h: [
-          { date: '11 Feb 2017', comp: 'Premier League', score: 'Arsenal 2-0 Hull', result: 'Win' },
-          { date: '17 Sep 2016', comp: 'Premier League', score: 'Hull 1-4 Arsenal', result: 'Win' },
-          { date: '08 Mar 2016', comp: 'FA Cup', score: 'Hull 0-4 Arsenal', result: 'Win' },
-          { date: '20 Feb 2016', comp: 'FA Cup', score: 'Arsenal 0-0 Hull', result: 'Draw' },
-          { date: '04 May 2015', comp: 'Premier League', score: 'Hull 1-3 Arsenal', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_6', comp: 'Premier League', cat: 'A', vs: 'Manchester City', gw: 13,
-        kickoffTimestamp: new Date('2026-11-28T17:30:00Z').getTime(),
-        logo: 'https://crests.football-data.org/65.png', date: 'Sat 28 Nov 2026', time: '17:30 GMT', claimedBy: null,
-        headline: 'Heavyweight title clash under the Emirates floodlights.',
-        news: 'Category A showdown. Arsenal defeated Manchester City 3-0 in the 2026 Community Shield and hold an unbeaten home league streak.',
-        awayFormation: '4-1-4-1',
-        awayLineup: {
-          fw: [{n:'Haaland', num:9}],
-          am: [{n:'Grealish', num:10}, {n:'Foden', num:47}, {n:'De Bruyne', num:17}, {n:'Savinho', num:26}],
-          dm: [{n:'Rodri', num:16}],
-          df: [{n:'Gvardiol', num:24}, {n:'Dias', num:3}, {n:'Akanji', num:25}, {n:'Walker', num:2}],
-          gk: [{n:'Ederson', num:31}]
-        },
-        h2h: [
-          { date: '16 Aug 2026', comp: 'Community Shield', score: 'Arsenal 3-0 Man City', result: 'Win' },
-          { date: '22 Mar 2026', comp: 'EFL Cup Final', score: 'Arsenal 0-2 Man City', result: 'Loss' },
-          { date: '22 Sep 2024', comp: 'Premier League', score: 'Man City 2-2 Arsenal', result: 'Draw' },
-          { date: '31 Mar 2024', comp: 'Premier League', score: 'Man City 0-0 Arsenal', result: 'Draw' },
-          { date: '08 Oct 2023', comp: 'Premier League', score: 'Arsenal 1-0 Man City', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_7', comp: 'Premier League', cat: 'C', vs: 'Bournemouth', gw: 16,
-        kickoffTimestamp: new Date('2026-12-12T15:00:00Z').getTime(),
-        logo: 'https://crests.football-data.org/1044.png', date: 'Sat 12 Dec 2026', time: '15:00 GMT', claimedBy: null,
-        headline: 'Winter Category C tie ahead of the congested festive schedule.',
-        news: 'Arsenal have won all 5 of their last 5 meetings against Bournemouth across the Premier League and FA Cup.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Evanilson', num:9}],
-          am: [{n:'Semenyo', num:24}, {n:'Kluivert', num:19}, {n:'Tavernier', num:16}],
-          dm: [{n:'Cook', num:4}, {n:'Christie', num:10}],
-          df: [{n:'Kerkez', num:3}, {n:'Senesi', num:5}, {n:'Zabarnyi', num:27}, {n:'Smith', num:15}],
-          gk: [{n:'Kepa', num:13}]
-        },
-        h2h: [
-          { date: '04 May 2024', comp: 'Premier League', score: 'Arsenal 3-0 Bournemouth', result: 'Win' },
-          { date: '30 Sep 2023', comp: 'Premier League', score: 'Bournemouth 0-4 Arsenal', result: 'Win' },
-          { date: '04 Mar 2023', comp: 'Premier League', score: 'Arsenal 3-2 Bournemouth', result: 'Win' },
-          { date: '20 Aug 2022', comp: 'Premier League', score: 'Bournemouth 0-3 Arsenal', result: 'Win' },
-          { date: '27 Jan 2020', comp: 'FA Cup', score: 'Bournemouth 1-2 Arsenal', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_8', comp: 'Premier League', cat: 'A', vs: 'Manchester United', gw: 17,
-        kickoffTimestamp: new Date('2026-12-19T12:30:00Z').getTime(),
-        logo: 'https://crests.football-data.org/66.png', date: 'Sat 19 Dec 2026', time: '12:30 GMT', claimedBy: null,
-        headline: 'Christmas weekend Category A blockbuster against Manchester United.',
-        news: 'Festive fixture. Arsenal have won 4 of their last 5 league games against Manchester United.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Højlund', num:9}],
-          am: [{n:'Rashford', num:10}, {n:'Fernandes', num:8}, {n:'Garnacho', num:17}],
-          dm: [{n:'Mainoo', num:37}, {n:'Ugarte', num:25}],
-          df: [{n:'Shaw', num:23}, {n:'Martínez', num:6}, {n:'De Ligt', num:4}, {n:'Dalot', num:20}],
-          gk: [{n:'Onana', num:24}]
-        },
-        h2h: [
-          { date: '12 May 2024', comp: 'Premier League', score: 'Man Utd 0-1 Arsenal', result: 'Win' },
-          { date: '03 Sep 2023', comp: 'Premier League', score: 'Arsenal 3-1 Man Utd', result: 'Win' },
-          { date: '22 Jan 2023', comp: 'Premier League', score: 'Arsenal 3-2 Man Utd', result: 'Win' },
-          { date: '04 Sep 2022', comp: 'Premier League', score: 'Man Utd 3-1 Arsenal', result: 'Loss' },
-          { date: '23 Apr 2022', comp: 'Premier League', score: 'Arsenal 3-1 Man Utd', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_9', comp: 'Premier League', cat: 'C', vs: 'Ipswich Town', gw: 20,
-        kickoffTimestamp: new Date('2027-01-02T15:00:00Z').getTime(),
-        logo: 'https://crests.football-data.org/349.png', date: 'Sat 02 Jan 2027', time: '15:00 GMT', claimedBy: null,
-        headline: 'New Year home fixture to open the 2027 calendar year.',
-        news: 'Arsenal look to kick off the new year with 3 points against Ipswich Town at Emirates Stadium.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Delap', num:19}],
-          am: [{n:'Szmodics', num:23}, {n:'Chaplin', num:10}, {n:'Hutchinson', num:20}],
-          dm: [{n:'Morsy', num:5}, {n:'Phillips', num:8}],
-          df: [{n:'Davis', num:3}, {n:'Greaves', num:24}, {n:'Woolfenden', num:6}, {n:'Tuanzebe', num:40}],
-          gk: [{n:'Muric', num:1}]
-        },
-        h2h: [
-          { date: '27 Dec 2024', comp: 'Premier League', score: 'Arsenal 1-0 Ipswich', result: 'Win' },
-          { date: '12 Jan 2011', comp: 'League Cup', score: 'Ipswich 1-0 Arsenal', result: 'Loss' },
-          { date: '25 Jan 2011', comp: 'League Cup', score: 'Arsenal 3-0 Ipswich', result: 'Win' },
-          { date: '21 Apr 2002', comp: 'Premier League', score: 'Arsenal 2-0 Ipswich', result: 'Win' },
-          { date: '01 Dec 2001', comp: 'Premier League', score: 'Ipswich 0-2 Arsenal', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_10', comp: 'Premier League', cat: 'B', vs: 'Brentford', gw: 21,
-        kickoffTimestamp: new Date('2027-01-06T20:00:00Z').getTime(),
-        logo: 'https://crests.football-data.org/402.png', date: 'Wed 06 Jan 2027', time: '20:00 GMT', claimedBy: null,
-        headline: 'Midweek London derby action under the floodlights.',
-        news: 'Arsenal have won 4 of their last 5 meetings with Brentford across all competitions.',
-        awayFormation: '4-3-3',
-        awayLineup: {
-          fw: [{n:'Schade', num:7}, {n:'Wissa', num:11}, {n:'Mbeumo', num:19}],
-          dm: [{n:'Damsgaard', num:24}, {n:'Nørgaard', num:6}, {n:'Janelt', num:27}],
-          df: [{n:'Lewis-Potter', num:23}, {n:'Pinnock', num:5}, {n:'Collins', num:22}, {n:'Roerslev', num:30}],
-          gk: [{n:'Flekken', num:1}]
-        },
-        h2h: [
-          { date: '09 Mar 2024', comp: 'Premier League', score: 'Arsenal 2-1 Brentford', result: 'Win' },
-          { date: '25 Nov 2023', comp: 'Premier League', score: 'Brentford 0-1 Arsenal', result: 'Win' },
-          { date: '27 Sep 2023', comp: 'EFL Cup', score: 'Brentford 0-1 Arsenal', result: 'Win' },
-          { date: '11 Feb 2023', comp: 'Premier League', score: 'Arsenal 1-1 Brentford', result: 'Draw' },
-          { date: '18 Sep 2022', comp: 'Premier League', score: 'Brentford 0-3 Arsenal', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_11', comp: 'Premier League', cat: 'B', vs: 'Newcastle United', gw: 23,
-        kickoffTimestamp: new Date('2027-01-23T15:00:00Z').getTime(),
-        logo: 'https://crests.football-data.org/67.png', date: 'Sat 23 Jan 2027', time: '15:00 GMT', claimedBy: null,
-        headline: 'High-stakes Category B clash against Newcastle United.',
-        news: 'Crucial European qualification battle as the Magpies arrive at Emirates Stadium.',
-        awayFormation: '4-3-3',
-        awayLineup: {
-          fw: [{n:'Gordon', num:10}, {n:'Isak', num:14}, {n:'Murphy', num:23}],
-          dm: [{n:'Joelinton', num:7}, {n:'Guimarães', num:39}, {n:'Tonali', num:8}],
-          df: [{n:'Hall', num:20}, {n:'Burn', num:33}, {n:'Schär', num:5}, {n:'Livramento', num:21}],
-          gk: [{n:'Pope', num:22}]
-        },
-        h2h: [
-          { date: '24 Feb 2024', comp: 'Premier League', score: 'Arsenal 4-1 Newcastle', result: 'Win' },
-          { date: '04 Nov 2023', comp: 'Premier League', score: 'Newcastle 1-0 Arsenal', result: 'Loss' },
-          { date: '07 May 2023', comp: 'Premier League', score: 'Newcastle 0-2 Arsenal', result: 'Win' },
-          { date: '03 Jan 2023', comp: 'Premier League', score: 'Arsenal 0-0 Newcastle', result: 'Draw' },
-          { date: '16 May 2022', comp: 'Premier League', score: 'Newcastle 2-0 Arsenal', result: 'Loss' }
-        ]
-      },
-      { 
-        id: 'pl_12', comp: 'Premier League', cat: 'A', vs: 'Liverpool', gw: 25,
-        kickoffTimestamp: new Date('2027-02-06T16:30:00Z').getTime(),
-        logo: 'https://crests.football-data.org/64.png', date: 'Sat 06 Feb 2027', time: '16:30 GMT', claimedBy: null,
-        headline: 'Premier League title race showdown against Liverpool.',
-        news: 'Massive Category A clash. Arsenal enter having won 2 and drawn 2 of their last 5 league meetings with Liverpool.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Núñez', num:9}],
-          am: [{n:'Díaz', num:7}, {n:'Szoboszlai', num:8}, {n:'Salah', num:11}],
-          dm: [{n:'Mac Allister', num:10}, {n:'Gravenberch', num:38}],
-          df: [{n:'Robertson', num:26}, {n:'Van Dijk', num:4}, {n:'Konaté', num:5}, {n:'Alexander-Arnold', num:66}],
-          gk: [{n:'Alisson', num:1}]
-        },
-        h2h: [
-          { date: '04 Feb 2024', comp: 'Premier League', score: 'Arsenal 3-1 Liverpool', result: 'Win' },
-          { date: '07 Jan 2024', comp: 'FA Cup', score: 'Arsenal 0-2 Liverpool', result: 'Loss' },
-          { date: '23 Dec 2023', comp: 'Premier League', score: 'Liverpool 1-1 Arsenal', result: 'Draw' },
-          { date: '09 Apr 2023', comp: 'Premier League', score: 'Liverpool 2-2 Arsenal', result: 'Draw' },
-          { date: '09 Oct 2022', comp: 'Premier League', score: 'Arsenal 3-2 Liverpool', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_13', comp: 'Premier League', cat: 'B', vs: 'Fulham', gw: 26,
-        kickoffTimestamp: new Date('2027-02-20T15:00:00Z').getTime(),
-        logo: 'https://crests.football-data.org/63.png', date: 'Sat 20 Feb 2027', time: '15:00 GMT', claimedBy: null,
-        headline: 'West London rivals Fulham arrive at Emirates Stadium.',
-        news: 'Category B league clash as Arsenal look to pick up vital home points.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Jiménez', num:7}],
-          am: [{n:'Iwobi', num:17}, {n:'Smith Rowe', num:32}, {n:'Traoré', num:11}],
-          dm: [{n:'Lukic', num:20}, {n:'Berge', num:16}],
-          df: [{n:'Robinson', num:33}, {n:'Bassey', num:3}, {n:'Andersen', num:5}, {n:'Castagne', num:21}],
-          gk: [{n:'Leno', num:1}]
-        },
-        h2h: [
-          { date: '31 Dec 2023', comp: 'Premier League', score: 'Fulham 2-1 Arsenal', result: 'Loss' },
-          { date: '26 Aug 2023', comp: 'Premier League', score: 'Arsenal 2-2 Fulham', result: 'Draw' },
-          { date: '12 Mar 2023', comp: 'Premier League', score: 'Fulham 0-3 Arsenal', result: 'Win' },
-          { date: '27 Aug 2022', comp: 'Premier League', score: 'Arsenal 2-1 Fulham', result: 'Win' },
-          { date: '18 Apr 2021', comp: 'Premier League', score: 'Arsenal 1-1 Fulham', result: 'Draw' }
-        ]
-      },
-      { 
-        id: 'pl_14', comp: 'Premier League', cat: 'B', vs: 'Crystal Palace', gw: 28,
-        kickoffTimestamp: new Date('2027-03-03T20:00:00Z').getTime(),
-        logo: 'https://crests.football-data.org/354.png', date: 'Wed 03 Mar 2027', time: '20:00 GMT', claimedBy: null,
-        headline: 'Midweek London derby under the lights against Crystal Palace.',
-        news: 'Arsenal have won 4 of their last 5 league games against Crystal Palace, scoring 12 goals.',
-        awayFormation: '3-4-2-1',
-        awayLineup: {
-          fw: [{n:'Mateta', num:14}],
-          am: [{n:'Eze', num:10}, {n:'Nketiah', num:9}],
-          dm: [{n:'Mitchell', num:3}, {n:'Wharton', num:20}, {n:'Doucouré', num:28}, {n:'Muñoz', num:12}],
-          df: [{n:'Guéhi', num:6}, {n:'Riad', num:4}, {n:'Richards', num:26}],
-          gk: [{n:'Henderson', num:1}]
-        },
-        h2h: [
-          { date: '20 Jan 2024', comp: 'Premier League', score: 'Arsenal 5-0 Crystal Palace', result: 'Win' },
-          { date: '21 Aug 2023', comp: 'Premier League', score: 'Crystal Palace 0-1 Arsenal', result: 'Win' },
-          { date: '19 Mar 2023', comp: 'Premier League', score: 'Arsenal 4-1 Crystal Palace', result: 'Win' },
-          { date: '05 Aug 2022', comp: 'Premier League', score: 'Crystal Palace 0-2 Arsenal', result: 'Win' },
-          { date: '04 Apr 2022', comp: 'Premier League', score: 'Crystal Palace 3-0 Arsenal', result: 'Loss' }
-        ]
-      },
-      { 
-        id: 'pl_15', comp: 'Premier League', cat: 'C', vs: 'Sunderland', gw: 30,
-        kickoffTimestamp: new Date('2027-03-20T15:00:00Z').getTime(),
-        logo: 'https://crests.football-data.org/71.png', date: 'Sat 20 Mar 2027', time: '15:00 GMT', claimedBy: null,
-        headline: 'Spring Saturday afternoon fixture against Sunderland.',
-        news: 'Arsenal remain unbeaten in their last 5 competitive fixtures against Sunderland, winning 4.',
-        awayFormation: '4-3-3',
-        awayLineup: {
-          fw: [{n:'Mundle', num:14}, {n:'Mayenda', num:12}, {n:'Roberts', num:10}],
-          dm: [{n:'Bellingham', num:7}, {n:'Neil', num:4}, {n:'Rigg', num:11}],
-          df: [{n:'Cirkin', num:3}, {n:'O\'Nien', num:13}, {n:'Mepham', num:5}, {n:'Hume', num:2}],
-          gk: [{n:'Patterson', num:1}]
-        },
-        h2h: [
-          { date: '21 Dec 2021', comp: 'EFL Cup', score: 'Arsenal 5-1 Sunderland', result: 'Win' },
-          { date: '16 May 2017', comp: 'Premier League', score: 'Arsenal 2-0 Sunderland', result: 'Win' },
-          { date: '29 Oct 2016', comp: 'Premier League', score: 'Sunderland 1-4 Arsenal', result: 'Win' },
-          { date: '24 Apr 2016', comp: 'Premier League', score: 'Sunderland 0-0 Arsenal', result: 'Draw' },
-          { date: '09 Jan 2016', comp: 'FA Cup', score: 'Arsenal 3-1 Sunderland', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_16', comp: 'Premier League', cat: 'B', vs: 'Aston Villa', gw: 32,
-        kickoffTimestamp: new Date('2027-04-17T15:00:00+01:00').getTime(),
-        logo: 'https://crests.football-data.org/58.png', date: 'Sat 17 Apr 2027', time: '15:00 BST', claimedBy: null,
-        headline: 'Critical late-season Category B tie against Unai Emery\'s Aston Villa.',
-        news: 'Crucial European qualification match as the season enters its final stretch.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Watkins', num:11}],
-          am: [{n:'Ramsey', num:41}, {n:'Rogers', num:27}, {n:'Bailey', num:31}],
-          dm: [{n:'Tielemans', num:8}, {n:'Onana', num:24}],
-          df: [{n:'Digne', num:12}, {n:'Pau Torres', num:14}, {n:'Konsa', num:4}, {n:'Cash', num:2}],
-          gk: [{n:'Martínez', num:23}]
-        },
-        h2h: [
-          { date: '24 Aug 2024', comp: 'Premier League', score: 'Aston Villa 0-2 Arsenal', result: 'Win' },
-          { date: '14 Apr 2024', comp: 'Premier League', score: 'Arsenal 0-2 Aston Villa', result: 'Loss' },
-          { date: '09 Dec 2023', comp: 'Premier League', score: 'Aston Villa 1-0 Arsenal', result: 'Loss' },
-          { date: '18 Feb 2023', comp: 'Premier League', score: 'Aston Villa 2-4 Arsenal', result: 'Win' },
-          { date: '31 Aug 2022', comp: 'Premier League', score: 'Arsenal 2-1 Aston Villa', result: 'Win' }
-        ]
-      },
-      { 
-        id: 'pl_17', comp: 'Premier League', cat: 'A', vs: 'Tottenham Hotspur', gw: 34,
-        kickoffTimestamp: new Date('2027-05-01T12:30:00+01:00').getTime(),
-        logo: 'https://crests.football-data.org/73.png', date: 'Sat 01 May 2027', time: '12:30 BST', claimedBy: null,
-        headline: 'The North London Derby. The biggest game of the season at Emirates Stadium.',
-        news: 'Category A derby. Arsenal have won 3 and drawn 1 of their last 5 North London Derbies.',
-        awayFormation: '4-3-3',
-        awayLineup: {
-          fw: [{n:'Son', num:7}, {n:'Solanke', num:19}, {n:'Johnson', num:22}],
-          dm: [{n:'Maddison', num:10}, {n:'Bentancur', num:30}, {n:'Kulusevski', num:21}],
-          df: [{n:'Udogie', num:13}, {n:'Van de Ven', num:37}, {n:'Romero', num:17}, {n:'Porro', num:23}],
-          gk: [{n:'Vicario', num:1}]
-        },
-        h2h: [
-          { date: '28 Apr 2024', comp: 'Premier League', score: 'Spurs 2-3 Arsenal', result: 'Win' },
-          { date: '24 Sep 2023', comp: 'Premier League', score: 'Arsenal 2-2 Spurs', result: 'Draw' },
-          { date: '15 Jan 2023', comp: 'Premier League', score: 'Spurs 0-2 Arsenal', result: 'Win' },
-          { date: '01 Oct 2022', comp: 'Premier League', score: 'Arsenal 3-1 Spurs', result: 'Win' },
-          { date: '12 May 2022', comp: 'Premier League', score: 'Spurs 3-0 Arsenal', result: 'Loss' }
-        ]
-      },
-      { 
-        id: 'pl_18', comp: 'Premier League', cat: 'C', vs: 'Nottingham Forest', gw: 36,
-        kickoffTimestamp: new Date('2027-05-15T15:00:00+01:00').getTime(),
-        logo: 'https://crests.football-data.org/351.png', date: 'Sat 15 May 2027', time: '15:00 BST', claimedBy: null,
-        headline: 'Penultimate home fixture of the 2026/27 campaign.',
-        news: 'Category C fixture. Arsenal have won 3 of their last 5 meetings with Nottingham Forest.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Wood', num:11}],
-          am: [{n:'Hudson-Odoi', num:14}, {n:'Gibbs-White', num:10}, {n:'Elanga', num:21}],
-          dm: [{n:'Anderson', num:8}, {n:'Ward-Prowse', num:18}],
-          df: [{n:'Moreno', num:15}, {n:'Murillo', num:5}, {n:'Milenkovic', num:31}, {n:'Aina', num:34}],
-          gk: [{n:'Sels', num:26}]
-        },
-        h2h: [
-          { date: '30 Jan 2024', comp: 'Premier League', score: 'Nottm Forest 1-2 Arsenal', result: 'Win' },
-          { date: '12 Aug 2023', comp: 'Premier League', score: 'Arsenal 2-1 Nottm Forest', result: 'Win' },
-          { date: '20 May 2023', comp: 'Premier League', score: 'Nottm Forest 1-0 Arsenal', result: 'Loss' },
-          { date: '30 Oct 2022', comp: 'Premier League', score: 'Arsenal 5-0 Nottm Forest', result: 'Win' },
-          { date: '09 Jan 2022', comp: 'FA Cup', score: 'Nottm Forest 1-0 Arsenal', result: 'Loss' }
-        ]
-      },
-      { 
-        id: 'pl_19', comp: 'Premier League', cat: 'B', vs: 'Brighton & Hove Albion', gw: 38,
-        kickoffTimestamp: new Date('2027-05-30T16:00:00+01:00').getTime(),
-        logo: 'https://crests.football-data.org/397.png', date: 'Sun 30 May 2027', time: '16:00 BST', claimedBy: null,
-        headline: 'Final day of the Premier League season at Emirates Stadium.',
-        news: 'Arsenal conclude their domestic home campaign against Brighton & Hove Albion.',
-        awayFormation: '4-2-3-1',
-        awayLineup: {
-          fw: [{n:'Ferguson', num:28}],
-          am: [{n:'Mitoma', num:22}, {n:'Rutter', num:14}, {n:'Minteh', num:11}],
-          dm: [{n:'Baleba', num:20}, {n:'Ayari', num:26}],
-          df: [{n:'Estupiñán', num:30}, {n:'Dunk', num:5}, {n:'Van Hecke', num:29}, {n:'Veltman', num:34}],
-          gk: [{n:'Verbruggen', num:1}]
-        },
-        h2h: [
-          { date: '06 Apr 2024', comp: 'Premier League', score: 'Brighton 0-3 Arsenal', result: 'Win' },
-          { date: '17 Dec 2023', comp: 'Premier League', score: 'Arsenal 2-0 Brighton', result: 'Win' },
-          { date: '14 May 2023', comp: 'Premier League', score: 'Arsenal 0-3 Brighton', result: 'Loss' },
-          { date: '31 Dec 2022', comp: 'Premier League', score: 'Brighton 2-4 Arsenal', result: 'Win' },
-          { date: '09 Nov 2022', comp: 'EFL Cup', score: 'Arsenal 1-3 Brighton', result: 'Loss' }
-        ]
-      }
+      { id: 'pl_3', comp: 'Premier League', cat: 'C', vs: 'Leeds United', gw: 8, kickoffTimestamp: new Date('2026-10-10T12:30:00+01:00').getTime(), logo: 'https://crests.football-data.org/341.png', date: 'Sat 10 Oct 2026', time: '12:30 BST', claimedBy: null, headline: 'Saturday lunchtime kickoff against Leeds.', news: 'Arsenal have won 5 consecutive matches against Leeds United.', awayFormation: '4-3-3', awayLineup: { fw: [{n:'Gnonto', num:29}, {n:'Piroe', num:10}, {n:'James', num:7}], dm: [{n:'Ampadu', num:4}, {n:'Tanaka', num:22}, {n:'Gruev', num:8}], df: [{n:'Firpo', num:3}, {n:'Struijk', num:5}, {n:'Rodon', num:6}, {n:'Bogle', num:2}], gk: [{n:'Meslier', num:1}] }, h2h: [{ date: '31 Jan 2026', comp: 'Premier League', score: 'Leeds 0-4 Arsenal', result: 'Win' }, { date: '23 Aug 2025', comp: 'Premier League', score: 'Arsenal 5-0 Leeds', result: 'Win' }, { date: '01 Apr 2023', comp: 'Premier League', score: 'Arsenal 4-1 Leeds', result: 'Win' }, { date: '16 Oct 2022', comp: 'Premier League', score: 'Leeds 0-1 Arsenal', result: 'Win' }, { date: '08 May 2022', comp: 'Premier League', score: 'Arsenal 2-1 Leeds', result: 'Win' }] },
+      { id: 'pl_4', comp: 'Premier League', cat: 'B', vs: 'Everton', gw: 9, kickoffTimestamp: new Date('2026-10-24T15:00:00+01:00').getTime(), logo: 'https://crests.football-data.org/62.png', date: 'Sat 24 Oct 2026', time: '15:00 BST', claimedBy: null, headline: 'Category B league clash against Everton.', news: 'Traditional 3pm kickoff at Emirates Stadium.', awayFormation: '4-4-1-1', awayLineup: { fw: [{n:'Calvert-Lewin', num:9}], am: [{n:'Ndiaye', num:10}], dm: [{n:'McNeil', num:7}, {n:'Gueye', num:27}, {n:'Garner', num:37}, {n:'Harrison', num:11}], df: [{n:'Mykolenko', num:19}, {n:'Branthwaite', num:32}, {n:'Tarkowski', num:6}, {n:'Coleman', num:23}], gk: [{n:'Pickford', num:1}] }, h2h: [{ date: '19 May 2024', comp: 'Premier League', score: 'Arsenal 2-1 Everton', result: 'Win' }, { date: '17 Sep 2023', comp: 'Premier League', score: 'Everton 0-1 Arsenal', result: 'Win' }, { date: '01 Mar 2023', comp: 'Premier League', score: 'Arsenal 4-0 Everton', result: 'Win' }, { date: '04 Feb 2023', comp: 'Premier League', score: 'Everton 1-0 Arsenal', result: 'Loss' }, { date: '22 May 2022', comp: 'Premier League', score: 'Arsenal 5-1 Everton', result: 'Win' }] },
+      { id: 'pl_5', comp: 'Premier League', cat: 'C', vs: 'Hull City', gw: 11, kickoffTimestamp: new Date('2026-11-07T15:00:00Z').getTime(), logo: 'https://crests.football-data.org/322.png', date: 'Sat 07 Nov 2026', time: '15:00 GMT', claimedBy: null, headline: 'Hull City visit Emirates Stadium.', news: 'Category C fixture.', awayFormation: '4-2-3-1', awayLineup: { fw: [{n:'Bedia', num:9}], am: [{n:'Belloumi', num:7}, {n:'Omur', num:10}, {n:'Kamara', num:11}], dm: [{n:'Slater', num:27}, {n:'Zambrano', num:18}], df: [{n:'Giles', num:3}, {n:'Jones', num:5}, {n:'Hughes', num:6}, {n:'Coyle', num:2}], gk: [{n:'Pandur', num:1}] }, h2h: [{ date: '11 Feb 2017', comp: 'Premier League', score: 'Arsenal 2-0 Hull', result: 'Win' }, { date: '17 Sep 2016', comp: 'Premier League', score: 'Hull 1-4 Arsenal', result: 'Win' }, { date: '08 Mar 2016', comp: 'FA Cup', score: 'Hull 0-4 Arsenal', result: 'Win' }, { date: '20 Feb 2016', comp: 'FA Cup', score: 'Arsenal 0-0 Hull', result: 'Draw' }, { date: '04 May 2015', comp: 'Premier League', score: 'Hull 1-3 Arsenal', result: 'Win' }] },
+      { id: 'pl_6', comp: 'Premier League', cat: 'A', vs: 'Manchester City', gw: 13, kickoffTimestamp: new Date('2026-11-28T17:30:00Z').getTime(), logo: 'https://crests.football-data.org/65.png', date: 'Sat 28 Nov 2026', time: '17:30 GMT', claimedBy: null, headline: 'Heavyweight title clash under the floodlights.', news: 'Category A showdown.', awayFormation: '4-1-4-1', awayLineup: { fw: [{n:'Haaland', num:9}], am: [{n:'Grealish', num:10}, {n:'Foden', num:47}, {n:'De Bruyne', num:17}, {n:'Savinho', num:26}], dm: [{n:'Rodri', num:16}], df: [{n:'Gvardiol', num:24}, {n:'Dias', num:3}, {n:'Akanji', num:25}, {n:'Walker', num:2}], gk: [{n:'Ederson', num:31}] }, h2h: [{ date: '16 Aug 2026', comp: 'Community Shield', score: 'Arsenal 3-0 Man City', result: 'Win' }, { date: '22 Mar 2026', comp: 'EFL Cup Final', score: 'Arsenal 0-2 Man City', result: 'Loss' }, { date: '22 Sep 2024', comp: 'Premier League', score: 'Man City 2-2 Arsenal', result: 'Draw' }, { date: '31 Mar 2024', comp: 'Premier League', score: 'Man City 0-0 Arsenal', result: 'Draw' }, { date: '08 Oct 2023', comp: 'Premier League', score: 'Arsenal 1-0 Man City', result: 'Win' }] },
+      { id: 'pl_7', comp: 'Premier League', cat: 'C', vs: 'Bournemouth', gw: 16, kickoffTimestamp: new Date('2026-12-12T15:00:00Z').getTime(), logo: 'https://crests.football-data.org/1044.png', date: 'Sat 12 Dec 2026', time: '15:00 GMT', claimedBy: null, headline: 'Winter Category C tie.', news: 'Arsenal have won all 5 of their last 5 against Bournemouth.', awayFormation: '4-2-3-1', awayLineup: { fw: [{n:'Evanilson', num:9}], am: [{n:'Semenyo', num:24}, {n:'Kluivert', num:19}, {n:'Tavernier', num:16}], dm: [{n:'Cook', num:4}, {n:'Christie', num:10}], df: [{n:'Kerkez', num:3}, {n:'Senesi', num:5}, {n:'Zabarnyi', num:27}, {n:'Smith', num:15}], gk: [{n:'Kepa', num:13}] }, h2h: [{ date: '04 May 2024', comp: 'Premier League', score: 'Arsenal 3-0 Bournemouth', result: 'Win' }, { date: '30 Sep 2023', comp: 'Premier League', score: 'Bournemouth 0-4 Arsenal', result: 'Win' }, { date: '04 Mar 2023', comp: 'Premier League', score: 'Arsenal 3-2 Bournemouth', result: 'Win' }, { date: '20 Aug 2022', comp: 'Premier League', score: 'Bournemouth 0-3 Arsenal', result: 'Win' }, { date: '27 Jan 2020', comp: 'FA Cup', score: 'Bournemouth 1-2 Arsenal', result: 'Win' }] },
+      { id: 'pl_8', comp: 'Premier League', cat: 'A', vs: 'Manchester United', gw: 17, kickoffTimestamp: new Date('2026-12-19T12:30:00Z').getTime(), logo: 'https://crests.football-data.org/66.png', date: 'Sat 19 Dec 2026', time: '12:30 GMT', claimedBy: null, headline: 'Christmas weekend Category A clash.', news: 'Arsenal have won 4 of the last 5 league meetings.', awayFormation: '4-2-3-1', awayLineup: { fw: [{n:'Højlund', num:9}], am: [{n:'Rashford', num:10}, {n:'Fernandes', num:8}, {n:'Garnacho', num:17}], dm: [{n:'Mainoo', num:37}, {n:'Ugarte', num:25}], df: [{n:'Shaw', num:23}, {n:'Martínez', num:6}, {n:'De Ligt', num:4}, {n:'Dalot', num:20}], gk: [{n:'Onana', num:24}] }, h2h: [{ date: '12 May 2024', comp: 'Premier League', score: 'Man Utd 0-1 Arsenal', result: 'Win' }, { date: '03 Sep 2023', comp: 'Premier League', score: 'Arsenal 3-1 Man Utd', result: 'Win' }, { date: '22 Jan 2023', comp: 'Premier League', score: 'Arsenal 3-2 Man Utd', result: 'Win' }, { date: '04 Sep 2022', comp: 'Premier League', score: 'Man Utd 3-1 Arsenal', result: 'Loss' }, { date: '23 Apr 2022', comp: 'Premier League', score: 'Arsenal 3-1 Man Utd', result: 'Win' }] },
+      { id: 'pl_9', comp: 'Premier League', cat: 'C', vs: 'Ipswich Town', gw: 20, kickoffTimestamp: new Date('2027-01-02T15:00:00Z').getTime(), logo: 'https://crests.football-data.org/349.png', date: 'Sat 02 Jan 2027', time: '15:00 GMT', claimedBy: null, headline: 'New Year home fixture.', news: 'Arsenal kick off 2027 at Emirates Stadium.', awayFormation: '4-2-3-1', awayLineup: { fw: [{n:'Delap', num:19}], am: [{n:'Szmodics', num:23}, {n:'Chaplin', num:10}, {n:'Hutchinson', num:20}], dm: [{n:'Morsy', num:5}, {n:'Phillips', num:8}], df: [{n:'Davis', num:3}, {n:'Greaves', num:24}, {n:'Woolfenden', num:6}, {n:'Tuanzebe', num:40}], gk: [{n:'Muric', num:1}] }, h2h: [{ date: '27 Dec 2024', comp: 'Premier League', score: 'Arsenal 1-0 Ipswich', result: 'Win' }, { date: '12 Jan 2011', comp: 'League Cup', score: 'Ipswich 1-0 Arsenal', result: 'Loss' }, { date: '25 Jan 2011', comp: 'League Cup', score: 'Arsenal 3-0 Ipswich', result: 'Win' }, { date: '21 Apr 2002', comp: 'Premier League', score: 'Arsenal 2-0 Ipswich', result: 'Win' }, { date: '01 Dec 2001', comp: 'Premier League', score: 'Ipswich 0-2 Arsenal', result: 'Win' }] },
+      { id: 'pl_10', comp: 'Premier League', cat: 'B', vs: 'Brentford', gw: 21, kickoffTimestamp: new Date('2027-01-06T20:00:00Z').getTime(), logo: 'https://crests.football-data.org/402.png', date: 'Wed 06 Jan 2027', time: '20:00 GMT', claimedBy: null, headline: 'Midweek London derby action.', news: 'Arsenal have won 4 of their last 5 against Brentford.', awayFormation: '4-3-3', awayLineup: { fw: [{n:'Schade', num:7}, {n:'Wissa', num:11}, {n:'Mbeumo', num:19}], dm: [{n:'Damsgaard', num:24}, {n:'Nørgaard', num:6}, {n:'Janelt', num:27}], df: [{n:'Lewis-Potter', num:23}, {n:'Pinnock', num:5}, {n:'Collins', num:22}, {n:'Roerslev', num:30}], gk: [{n:'Flekken', num:1}] }, h2h: [{ date: '09 Mar 2024', comp: 'Premier League', score: 'Arsenal 2-1 Brentford', result: 'Win' }, { date: '25 Nov 2023', comp: 'Premier League', score: 'Brentford 0-1 Arsenal', result: 'Win' }, { date: '27 Sep 2023', comp: 'EFL Cup', score: 'Brentford 0-1 Arsenal', result: 'Win' }, { date: '11 Feb 2023', comp: 'Premier League', score: 'Arsenal 1-1 Brentford', result: 'Draw' }, { date: '18 Sep 2022', comp: 'Premier League', score: 'Brentford 0-3 Arsenal', result: 'Win' }] },
+      { id: 'pl_11', comp: 'Premier League', cat: 'B', vs: 'Newcastle United', gw: 23, kickoffTimestamp: new Date('2027-01-23T15:00:00Z').getTime(), logo: 'https://crests.football-data.org/67.png', date: 'Sat 23 Jan 2027', time: '15:00 GMT', claimedBy: null, headline: 'Category B contest against Newcastle.', news: 'European qualification battle.', awayFormation: '4-3-3', awayLineup: { fw: [{n:'Gordon', num:10}, {n:'Isak', num:14}, {n:'Murphy', num:23}], dm: [{n:'Joelinton', num:7}, {n:'Guimarães', num:39}, {n:'Tonali', num:8}], df: [{n:'Hall', num:20}, {n:'Burn', num:33}, {n:'Schär', num:5}, {n:'Livramento', num:21}], gk: [{n:'Pope', num:22}] }, h2h: [{ date: '24 Feb 2024', comp: 'Premier League', score: 'Arsenal 4-1 Newcastle', result: 'Win' }, { date: '04 Nov 2023', comp: 'Premier League', score: 'Newcastle 1-0 Arsenal', result: 'Loss' }, { date: '07 May 2023', comp: 'Premier League', score: 'Newcastle 0-2 Arsenal', result: 'Win' }, { date: '03 Jan 2023', comp: 'Premier League', score: 'Arsenal 0-0 Newcastle', result: 'Draw' }, { date: '16 May 2022', comp: 'Premier League', score: 'Newcastle 2-0 Arsenal', result: 'Loss' }] },
+      { id: 'pl_12', comp: 'Premier League', cat: 'A', vs: 'Liverpool', gw: 25, kickoffTimestamp: new Date('2027-02-06T16:30:00Z').getTime(), logo: 'https://crests.football-data.org/64.png', date: 'Sat 06 Feb 2027', time: '16:30 GMT', claimedBy: null, headline: 'Title race showdown with Liverpool.', news: 'Category A showdown at Emirates Stadium.', awayFormation: '4-2-3-1', awayLineup: { fw: [{n:'Núñez', num:9}], am: [{n:'Díaz', num:7}, {n:'Szoboszlai', num:8}, {n:'Salah', num:11}], dm: [{n:'Mac Allister', num:10}, {n:'Gravenberch', num:38}], df: [{n:'Robertson', num:26}, {n:'Van Dijk', num:4}, {n:'Konaté', num:5}, {n:'Alexander-Arnold', num:66}], gk: [{n:'Alisson', num:1}] }, h2h: [{ date: '04 Feb 2024', comp: 'Premier League', score: 'Arsenal 3-1 Liverpool', result: 'Win' }, { date: '07 Jan 2024', comp: 'FA Cup', score: 'Arsenal 0-2 Liverpool', result: 'Loss' }, { date: '23 Dec 2023', comp: 'Premier League', score: 'Liverpool 1-1 Arsenal', result: 'Draw' }, { date: '09 Apr 2023', comp: 'Premier League', score: 'Liverpool 2-2 Arsenal', result: 'Draw' }, { date: '09 Oct 2022', comp: 'Premier League', score: 'Arsenal 3-2 Liverpool', result: 'Win' }] },
+      { id: 'pl_13', comp: 'Premier League', cat: 'B', vs: 'Fulham', gw: 26, kickoffTimestamp: new Date('2027-02-20T15:00:00Z').getTime(), logo: 'https://crests.football-data.org/63.png', date: 'Sat 20 Feb 2027', time: '15:00 GMT', claimedBy: null, headline: 'Fulham visit Emirates Stadium.', news: 'Category B league clash.', awayFormation: '4-2-3-1', awayLineup: { fw: [{n:'Jiménez', num:7}], am: [{n:'Iwobi', num:17}, {n:'Smith Rowe', num:32}, {n:'Traoré', num:11}], dm: [{n:'Lukic', num:20}, {n:'Berge', num:16}], df: [{n:'Robinson', num:33}, {n:'Bassey', num:3}, {n:'Andersen', num:5}, {n:'Castagne', num:21}], gk: [{n:'Leno', num:1}] }, h2h: [{ date: '31 Dec 2023', comp: 'Premier League', score: 'Fulham 2-1 Arsenal', result: 'Loss' }, { date: '26 Aug 2023', comp: 'Premier League', score: 'Arsenal 2-2 Fulham', result: 'Draw' }, { date: '12 Mar 2023', comp: 'Premier League', score: 'Fulham 0-3 Arsenal', result: 'Win' }, { date: '27 Aug 2022', comp: 'Premier League', score: 'Arsenal 2-1 Fulham', result: 'Win' }, { date: '18 Apr 2021', comp: 'Premier League', score: 'Arsenal 1-1 Fulham', result: 'Draw' }] },
+      { id: 'pl_14', comp: 'Premier League', cat: 'B', vs: 'Crystal Palace', gw: 28, kickoffTimestamp: new Date('2027-03-03T20:00:00Z').getTime(), logo: 'https://crests.football-data.org/354.png', date: 'Wed 03 Mar 2027', time: '20:00 GMT', claimedBy: null, headline: 'Midweek London derby vs Palace.', news: 'Arsenal have won 4 of the last 5 league meetings.', awayFormation: '3-4-2-1', awayLineup: { fw: [{n:'Mateta', num:14}], am: [{n:'Eze', num:10}, {n:'Nketiah', num:9}], dm: [{n:'Mitchell', num:3}, {n:'Wharton', num:20}, {n:'Doucouré', num:28}, {n:'Muñoz', num:12}], df: [{n:'Guéhi', num:6}, {n:'Riad', num:4}, {n:'Richards', num:26}], gk: [{n:'Henderson', num:1}] }, h2h: [{ date: '20 Jan 2024', comp: 'Premier League', score: 'Arsenal 5-0 Crystal Palace', result: 'Win' }, { date: '21 Aug 2023', comp: 'Premier League', score: 'Crystal Palace 0-1 Arsenal', result: 'Win' }, { date: '19 Mar 2023', comp: 'Premier League', score: 'Arsenal 4-1 Crystal Palace', result: 'Win' }, { date: '05 Aug 2022', comp: 'Premier League', score: 'Crystal Palace 0-2 Arsenal', result: 'Win' }, { date: '04 Apr 2022', comp: 'Premier League', score: 'Crystal Palace 3-0 Arsenal', result: 'Loss' }] },
+      { id: 'pl_15', comp: 'Premier League', cat: 'C', vs: 'Sunderland', gw: 30, kickoffTimestamp: new Date('2027-03-20T15:00:00Z').getTime(), logo: 'https://crests.football-data.org/71.png', date: 'Sat 20 Mar 2027', time: '15:00 GMT', claimedBy: null, headline: 'Saturday afternoon fixture vs Sunderland.', news: 'Arsenal remain unbeaten in the last 5 meetings.', awayFormation: '4-3-3', awayLineup: { fw: [{n:'Mundle', num:14}, {n:'Mayenda', num:12}, {n:'Roberts', num:10}], dm: [{n:'Bellingham', num:7}, {n:'Neil', num:4}, {n:'Rigg', num:11}], df: [{n:'Cirkin', num:3}, {n:'O\'Nien', num:13}, {n:'Mepham', num:5}, {n:'Hume', num:2}], gk: [{n:'Patterson', num:1}] }, h2h: [{ date: '21 Dec 2021', comp: 'EFL Cup', score: 'Arsenal 5-1 Sunderland', result: 'Win' }, { date: '16 May 2017', comp: 'Premier League', score: 'Arsenal 2-0 Sunderland', result: 'Win' }, { date: '29 Oct 2016', comp: 'Premier League', score: 'Sunderland 1-4 Arsenal', result: 'Win' }, { date: '24 Apr 2016', comp: 'Premier League', score: 'Sunderland 0-0 Arsenal', result: 'Draw' }, { date: '09 Jan 2016', comp: 'FA Cup', score: 'Arsenal 3-1 Sunderland', result: 'Win' }] },
+      { id: 'pl_16', comp: 'Premier League', cat: 'B', vs: 'Aston Villa', gw: 32, kickoffTimestamp: new Date('2027-04-17T15:00:00+01:00').getTime(), logo: 'https://crests.football-data.org/58.png', date: 'Sat 17 Apr 2027', time: '15:00 BST', claimedBy: null, headline: 'Late season clash vs Aston Villa.', news: 'Crucial European qualification match.', awayFormation: '4-2-3-1', awayLineup: { fw: [{n:'Watkins', num:11}], am: [{n:'Ramsey', num:41}, {n:'Rogers', num:27}, {n:'Bailey', num:31}], dm: [{n:'Tielemans', num:8}, {n:'Onana', num:24}], df: [{n:'Digne', num:12}, {n:'Pau Torres', num:14}, {n:'Konsa', num:4}, {n:'Cash', num:2}], gk: [{n:'Martínez', num:23}] }, h2h: [{ date: '24 Aug 2024', comp: 'Premier League', score: 'Aston Villa 0-2 Arsenal', result: 'Win' }, { date: '14 Apr 2024', comp: 'Premier League', score: 'Arsenal 0-2 Aston Villa', result: 'Loss' }, { date: '09 Dec 2023', comp: 'Premier League', score: 'Aston Villa 1-0 Arsenal', result: 'Loss' }, { date: '18 Feb 2023', comp: 'Premier League', score: 'Aston Villa 2-4 Arsenal', result: 'Win' }, { date: '31 Aug 2022', comp: 'Premier League', score: 'Arsenal 2-1 Aston Villa', result: 'Win' }] },
+      { id: 'pl_17', comp: 'Premier League', cat: 'A', vs: 'Tottenham Hotspur', gw: 34, kickoffTimestamp: new Date('2027-05-01T12:30:00+01:00').getTime(), logo: 'https://crests.football-data.org/73.png', date: 'Sat 01 May 2027', time: '12:30 BST', claimedBy: null, headline: 'North London Derby.', news: 'Category A derby at Emirates Stadium.', awayFormation: '4-3-3', awayLineup: { fw: [{n:'Son', num:7}, {n:'Solanke', num:19}, {n:'Johnson', num:22}], dm: [{n:'Maddison', num:10}, {n:'Bentancur', num:30}, {n:'Kulusevski', num:21}], df: [{n:'Udogie', num:13}, {n:'Van de Ven', num:37}, {n:'Romero', num:17}, {n:'Porro', num:23}], gk: [{n:'Vicario', num:1}] }, h2h: [{ date: '28 Apr 2024', comp: 'Premier League', score: 'Spurs 2-3 Arsenal', result: 'Win' }, { date: '24 Sep 2023', comp: 'Premier League', score: 'Arsenal 2-2 Spurs', result: 'Draw' }, { date: '15 Jan 2023', comp: 'Premier League', score: 'Spurs 0-2 Arsenal', result: 'Win' }, { date: '01 Oct 2022', comp: 'Premier League', score: 'Arsenal 3-1 Spurs', result: 'Win' }, { date: '12 May 2022', comp: 'Premier League', score: 'Spurs 3-0 Arsenal', result: 'Loss' }] },
+      { id: 'pl_18', comp: 'Premier League', cat: 'C', vs: 'Nottingham Forest', gw: 36, kickoffTimestamp: new Date('2027-05-15T15:00:00+01:00').getTime(), logo: 'https://crests.football-data.org/351.png', date: 'Sat 15 May 2027', time: '15:00 BST', claimedBy: null, headline: 'Penultimate home fixture.', news: 'Arsenal have won 3 of their last 5 with Forest.', awayFormation: '4-2-3-1', awayLineup: { fw: [{n:'Wood', num:11}], am: [{n:'Hudson-Odoi', num:14}, {n:'Gibbs-White', num:10}, {n:'Elanga', num:21}], dm: [{n:'Anderson', num:8}, {n:'Ward-Prowse', num:18}], df: [{n:'Moreno', num:15}, {n:'Murillo', num:5}, {n:'Milenkovic', num:31}, {n:'Aina', num:34}], gk: [{n:'Sels', num:26}] }, h2h: [{ date: '30 Jan 2024', comp: 'Premier League', score: 'Nottm Forest 1-2 Arsenal', result: 'Win' }, { date: '12 Aug 2023', comp: 'Premier League', score: 'Arsenal 2-1 Nottm Forest', result: 'Win' }, { date: '20 May 2023', comp: 'Premier League', score: 'Nottm Forest 1-0 Arsenal', result: 'Loss' }, { date: '30 Oct 2022', comp: 'Premier League', score: 'Arsenal 5-0 Nottm Forest', result: 'Win' }, { date: '09 Jan 2022', comp: 'FA Cup', score: 'Nottm Forest 1-0 Arsenal', result: 'Loss' }] },
+      { id: 'pl_19', comp: 'Premier League', cat: 'B', vs: 'Brighton & Hove Albion', gw: 38, kickoffTimestamp: new Date('2027-05-30T16:00:00+01:00').getTime(), logo: 'https://crests.football-data.org/397.png', date: 'Sun 30 May 2027', time: '16:00 BST', claimedBy: null, headline: 'Final day of the Premier League season.', news: 'Arsenal conclude their domestic campaign.', awayFormation: '4-2-3-1', awayLineup: { fw: [{n:'Ferguson', num:28}], am: [{n:'Mitoma', num:22}, {n:'Rutter', num:14}, {n:'Minteh', num:11}], dm: [{n:'Baleba', num:20}, {n:'Ayari', num:26}], df: [{n:'Estupiñán', num:30}, {n:'Dunk', num:5}, {n:'Van Hecke', num:29}, {n:'Veltman', num:34}], gk: [{n:'Verbruggen', num:1}] }, h2h: [{ date: '06 Apr 2024', comp: 'Premier League', score: 'Brighton 0-3 Arsenal', result: 'Win' }, { date: '17 Dec 2023', comp: 'Premier League', score: 'Arsenal 2-0 Brighton', result: 'Win' }, { date: '14 May 2023', comp: 'Premier League', score: 'Arsenal 0-3 Brighton', result: 'Loss' }, { date: '31 Dec 2022', comp: 'Premier League', score: 'Brighton 2-4 Arsenal', result: 'Win' }, { date: '09 Nov 2022', comp: 'EFL Cup', score: 'Arsenal 1-3 Brighton', result: 'Loss' } ] }
     ];
 
     let currentView = 'grid';
@@ -1086,35 +703,31 @@
       matches: INITIAL_FIXTURES
     };
 
-    function loadState() {
-      try {
-        const saved = localStorage.getItem('arsenal_planner_state_final');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          state.theme = parsed.theme || 'light';
-          state.members = parsed.members || state.members;
-          state.matches = INITIAL_FIXTURES.map(f => {
-            const existing = parsed.matches?.find(m => m.id === f.id);
-            return existing ? { ...f, claimedBy: existing.claimedBy } : f;
-          });
-        }
-      } catch (e) {
-        console.warn('Storage sandboxed');
+    // ⚡ REAL-TIME CLOUD LISTENER
+    onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const cloudData = docSnap.data();
+        state.members = cloudData.members || state.members;
+        state.matches = INITIAL_FIXTURES.map(f => {
+          const cloudMatch = cloudData.matches?.find(m => m.id === f.id);
+          return cloudMatch ? { ...f, claimedBy: cloudMatch.claimedBy } : f;
+        });
+      } else {
+        saveState();
       }
-      document.documentElement.setAttribute('data-theme', state.theme);
-    }
+      renderAll();
+    });
 
     function saveState() {
-      try {
-        localStorage.setItem('arsenal_planner_state_final', JSON.stringify(state));
-      } catch (e) {}
-      renderAll();
+      setDoc(docRef, {
+        members: state.members,
+        matches: state.matches.map(m => ({ id: m.id, claimedBy: m.claimedBy }))
+      }, { merge: true });
     }
 
     function toggleTheme() {
       state.theme = state.theme === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', state.theme);
-      saveState();
     }
 
     function switchMainTab(tab) {
@@ -1163,7 +776,6 @@
       btn.textContent = isOpen ? '− Show less' : '+ Read match preview';
     }
 
-    /* Countdown Timer Engine */
     function initCountdown() {
       if (countdownInterval) clearInterval(countdownInterval);
 
@@ -1195,7 +807,6 @@
       countdownInterval = setInterval(updateTimer, 1000);
     }
 
-    /* Mini Table Snapshot Engine */
     function renderMiniTable() {
       const top4 = PREM_STANDINGS_2627.slice(0, 4);
       const tbody = document.getElementById('miniTableBody');
@@ -1209,7 +820,6 @@
       `).join('');
     }
 
-    /* Full Table Modal Engine */
     function openFullTableModal() {
       const tbody = document.getElementById('fullTableModalBody');
       tbody.innerHTML = PREM_STANDINGS_2627.map(row => `
@@ -1229,7 +839,6 @@
     function closeFullTableModal() { document.getElementById('fullTableModal').classList.remove('open'); }
     function closeTableModalOnBg(e) { if (e.target.id === 'fullTableModal') closeFullTableModal(); }
 
-    /* Match Detail Modal */
     function openMatchDetails(matchId) {
       const m = state.matches.find(x => x.id === matchId);
       if (!m) return;
@@ -1289,10 +898,6 @@
       navigator.clipboard.writeText(text).then(() => { alert("Copied summary to clipboard!"); });
     }
 
-    function syncLiveSchedules() {
-      alert("Live Schedule Synced: Checked Premier League and UEFA broadcast fixtures. All dates and times are current.");
-    }
-
     function addCustomFixture() {
       const vs = prompt("Opponent Name (e.g. Real Madrid, PSG, Bayern):");
       if (!vs) return;
@@ -1339,7 +944,7 @@
         <div class="member-pill">
           <span class="dot" style="background:${m.color};"></span>
           <span>${m.name}</span>
-          <button class="del-btn" onclick="removeMember('${m.id}')">×</button>
+          <button class="del-btn" onclick="window.removeMember('${m.id}')">×</button>
         </div>
       `).join('');
     }
@@ -1379,7 +984,7 @@
           const assigned = state.members.find(x => x.id === m.claimedBy);
 
           return `
-            <div class="fixture-card" onclick="openMatchDetails('${m.id}')">
+            <div class="fixture-card" onclick="window.openMatchDetails('${m.id}')">
               <div class="card-top">
                 <span class="cat-tag cat-${m.cat}">Category ${m.cat} • ${m.comp}</span>
               </div>
@@ -1404,7 +1009,7 @@
                     const isClaimed = m.claimedBy === mem.id;
                     const style = isClaimed ? `background:${mem.color}; border-color:${mem.color};` : '';
                     return `
-                      <button class="claim-btn ${isClaimed ? 'claimed' : ''}" style="${style}" onclick="toggleTicket('${m.id}', '${mem.id}', event)">
+                      <button class="claim-btn ${isClaimed ? 'claimed' : ''}" style="${style}" onclick="window.toggleTicket('${m.id}', '${mem.id}', event)">
                         ${isClaimed ? '✓ ' : '+ '} ${mem.name}
                       </button>
                     `;
@@ -1420,7 +1025,7 @@
           const assigned = state.members.find(x => x.id === m.claimedBy);
 
           return `
-            <div class="list-item" onclick="openMatchDetails('${m.id}')">
+            <div class="list-item" onclick="window.openMatchDetails('${m.id}')">
               <span class="cat-tag cat-${m.cat}" style="text-align:center;">Cat ${m.cat}</span>
               <div>
                 <div style="font-weight:700;">vs ${m.vs}</div>
@@ -1435,7 +1040,7 @@
                   const isClaimed = m.claimedBy === mem.id;
                   const style = isClaimed ? `background:${mem.color}; border-color:${mem.color};` : '';
                   return `
-                    <button class="claim-btn ${isClaimed ? 'claimed' : ''}" style="${style}" onclick="toggleTicket('${m.id}', '${mem.id}', event)">
+                    <button class="claim-btn ${isClaimed ? 'claimed' : ''}" style="${style}" onclick="window.toggleTicket('${m.id}', '${mem.id}', event)">
                       ${isClaimed ? '✓ ' : '+ '} ${mem.name}
                     </button>
                   `;
@@ -1447,7 +1052,6 @@
       }
     }
 
-    /* Stats Page: Tallies, Breakdown by Cat, and Full Match-by-Match Log */
     function renderStatsPage() {
       const counts = {};
       const catCounts = {};
@@ -1469,7 +1073,6 @@
         }
       });
 
-      // Render Top Summary Tally Boxes
       let talliesHtml = state.members.map(m => `
         <div class="stat-tally-box" style="border-top: 3px solid ${m.color};">
           <div class="num" style="color:${m.color};">${counts[m.id] || 0}</div>
@@ -1489,7 +1092,6 @@
       `;
       document.getElementById('statsTalliesGrid').innerHTML = talliesHtml;
 
-      // Render Member Table
       document.getElementById('memberStatsTableBody').innerHTML = state.members.map(m => `
         <tr>
           <td><strong style="color:${m.color};">${m.name}</strong></td>
@@ -1501,7 +1103,6 @@
         </tr>
       `).join('');
 
-      // Render Full Match Log
       document.getElementById('attendeeLogTableBody').innerHTML = state.matches.map(m => {
         const assigned = state.members.find(x => x.id === m.claimedBy);
         return `
@@ -1516,7 +1117,24 @@
       }).join('');
     }
 
-    loadState();
+    // Attach functions to window so HTML inline onclick handlers work
+    window.toggleTheme = toggleTheme;
+    window.switchMainTab = switchMainTab;
+    window.setView = setView;
+    window.addMember = addMember;
+    window.removeMember = removeMember;
+    window.toggleTicket = toggleTicket;
+    window.toggleNewsAccordion = toggleNewsAccordion;
+    window.openFullTableModal = openFullTableModal;
+    window.closeFullTableModal = closeFullTableModal;
+    window.closeTableModalOnBg = closeTableModalOnBg;
+    window.openMatchDetails = openMatchDetails;
+    window.closeModal = closeModal;
+    window.closeModalOnBg = closeModalOnBg;
+    window.copyWhatsAppSummary = copyWhatsAppSummary;
+    window.addCustomFixture = addCustomFixture;
+    window.renderMatches = renderMatches;
+
     renderAll();
     initCountdown();
   </script>
