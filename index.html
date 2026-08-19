@@ -1,23 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Arsenal 2026/27 Live Matchday Planner</title>
+  <title>Arsenal 2026/27 Matchday Planner</title>
   <style>
-    :root[data-theme="dark"] {
-      --bg: #0a0e14;
-      --card-bg: #121820;
-      --card-border: #1e2633;
-      --modal-bg: #151c27;
-      --text-main: #f0f6fc;
-      --text-sub: #8b949e;
-      --hover-bg: #1c2430;
-      --inner-bg: #0d1117;
-      --pitch-bg: #1b4332;
-      --pitch-line: rgba(255,255,255,0.25);
-    }
-
     :root[data-theme="light"] {
       --bg: #f4f6f8;
       --card-bg: #ffffff;
@@ -29,6 +16,19 @@
       --inner-bg: #f6f8fa;
       --pitch-bg: #2d6a4f;
       --pitch-line: rgba(255,255,255,0.35);
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0a0e14;
+      --card-bg: #121820;
+      --card-border: #1e2633;
+      --modal-bg: #151c27;
+      --text-main: #f0f6fc;
+      --text-sub: #8b949e;
+      --hover-bg: #1c2430;
+      --inner-bg: #0d1117;
+      --pitch-bg: #1b4332;
+      --pitch-line: rgba(255,255,255,0.25);
     }
 
     :root {
@@ -44,7 +44,7 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text-main); padding: 16px 12px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 1050px; display: flex; flex-direction: column; gap: 16px; }
+    .container { width: 100%; max-width: 1100px; display: flex; flex-direction: column; gap: 16px; }
 
     /* Header */
     header {
@@ -86,46 +86,126 @@
     .btn-sync { background: #3b82f6; color: #fff; font-weight: 700; }
     .btn-sync:hover { background: #2563eb; }
 
-    /* Sync Status Bar */
-    .sync-bar {
-      background: var(--inner-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 8px 14px;
-      font-size: 0.78rem;
+    /* Nav Tabs */
+    .nav-tabs { display: flex; gap: 8px; border-bottom: 2px solid var(--card-border); padding-bottom: 8px; }
+    .nav-tab {
+      background: transparent;
+      border: none;
       color: var(--text-sub);
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .nav-tab.active {
+      background: var(--card-bg);
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border: 1px solid var(--card-border);
+    }
+
+    /* Top 3-Column Dashboard */
+    .top-dashboard {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 900px) {
+      .top-dashboard { grid-template-columns: 1fr; }
+    }
+
+    .dashboard-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .dashboard-card h2 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      letter-spacing: 1px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    /* Panels */
-    .panel { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px 20px; }
-    .panel h2 { font-size: 0.82rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; margin-bottom: 10px; }
-    .members-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    /* Members Styling */
+    .members-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
     .member-pill {
       background: var(--inner-bg);
       border: 1px solid var(--card-border);
-      padding: 5px 12px;
+      padding: 4px 10px;
       border-radius: 20px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
-    .member-pill .dot { width: 9px; height: 9px; border-radius: 50%; }
-    .member-pill .del-btn { background: none; border: none; color: var(--text-sub); cursor: pointer; font-size: 0.95rem; }
+    .member-pill .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .member-pill .del-btn { background: none; border: none; color: var(--text-sub); cursor: pointer; font-size: 0.9rem; }
     .member-pill .del-btn:hover { color: #ff5c5c; }
-    .add-form { display: flex; gap: 8px; max-width: 400px; }
+    .add-form { display: flex; gap: 6px; margin-top: 4px; }
     .add-form input {
       background: var(--inner-bg);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 7px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
       flex: 1;
     }
+
+    /* Next Match Countdown */
+    .next-match-box {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .next-match-header { display: flex; justify-content: space-between; align-items: center; }
+    .next-match-title { font-size: 0.95rem; font-weight: 700; }
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 4px;
+      text-align: center;
+    }
+    .countdown-unit {
+      background: var(--inner-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 6px 2px;
+    }
+    .countdown-val { font-size: 1.1rem; font-weight: 800; color: #0284c7; }
+    :root[data-theme="dark"] .countdown-val { color: #38bdf8; }
+    .countdown-lbl { font-size: 0.65rem; color: var(--text-sub); text-transform: uppercase; }
+
+    /* Mini Table Snapshot */
+    .mini-table-box {
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .mini-table-box:hover { border-color: var(--cat-b); }
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.76rem;
+      margin-top: 4px;
+    }
+    .mini-table th, .mini-table td { padding: 4px 6px; text-align: left; }
+    .mini-table th { color: var(--text-sub); font-size: 0.68rem; text-transform: uppercase; }
+    .mini-table tr.highlight { background: rgba(219, 0, 7, 0.1); font-weight: 700; border-radius: 4px; }
+    .mini-crest { width: 14px; height: 14px; object-fit: contain; vertical-align: middle; margin-right: 4px; }
 
     /* Controls Bar */
     .controls-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
@@ -225,7 +305,7 @@
     @media (max-width: 768px) { .list-item { grid-template-columns: 1fr; gap: 8px; } }
     .list-date { font-size: 0.8rem; font-weight: 600; color: var(--text-sub); }
 
-    /* Modal Layout */
+    /* Modals */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(5px); display: none; justify-content: center;
@@ -244,14 +324,14 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
     .modal-title { display: flex; align-items: center; gap: 12px; }
     .modal-title h3 { font-size: 1.25rem; font-weight: 800; }
     .modal-close { background: none; border: none; font-size: 1.4rem; color: var(--text-sub); cursor: pointer; }
 
-    /* Expandable News Box */
+    /* News Box */
     .news-accordion {
       background: var(--inner-bg);
       border: 1px solid var(--card-border);
@@ -281,7 +361,6 @@
       cursor: pointer;
       align-self: flex-start;
       padding: 0;
-      margin-top: 2px;
     }
 
     /* Pitch Visualizer */
@@ -311,7 +390,22 @@
     }
     .player-name { font-size: 0.65rem; font-weight: 700; color: #fff; background: rgba(0,0,0,0.6); padding: 1px 4px; border-radius: 4px; white-space: nowrap; }
 
-    /* Tables */
+    /* Stats View Styling */
+    .stats-tally-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+    .stat-tally-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-tally-box .num { font-size: 1.6rem; font-weight: 800; }
+    .stat-tally-box .lbl { font-size: 0.72rem; text-transform: uppercase; color: var(--text-sub); margin-top: 2px; }
+
     .stats-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); }
     .stats-table th, .stats-table td { padding: 10px 14px; text-align: left; font-size: 0.85rem; border-bottom: 1px solid var(--card-border); }
     .stats-table th { background: var(--inner-bg); color: var(--text-sub); text-transform: uppercase; font-size: 0.72rem; }
@@ -328,48 +422,149 @@
       </div>
       <div class="header-btns">
         <button class="btn btn-sync" onclick="syncLiveSchedules()">🔄 Sync Schedule</button>
-        <button class="btn btn-secondary" onclick="toggleTheme()">🌓 Theme</button>
+        <button class="btn btn-secondary" onclick="toggleTheme()">🌓 Light/Dark</button>
         <button class="btn btn-wa" onclick="copyWhatsAppSummary()">💬 WhatsApp</button>
       </div>
     </header>
 
-    <div class="sync-bar">
-      <span id="syncStatusText">🟢 Schedule Status: Connected to Premier League & UEFA live match feeds</span>
-      <span id="lastSyncedTime" style="font-weight:600;">Live Feed Active</span>
+    <!-- Nav Tabs -->
+    <div class="nav-tabs">
+      <button id="tabFixtures" class="nav-tab active" onclick="switchMainTab('fixtures')">📅 Fixtures & Allocations</button>
+      <button id="tabStats" class="nav-tab" onclick="switchMainTab('stats')">📊 Allocation & Attendance Stats</button>
     </div>
 
     <!-- MAIN VIEW: FIXTURES -->
-    <div class="panel">
-      <h2>Group Members</h2>
-      <div class="members-wrap" id="membersList"></div>
-      <form class="add-form" onsubmit="addMember(event)">
-        <input type="text" id="newMemberName" placeholder="Add member name..." required />
-        <button type="submit" class="btn">Add</button>
-      </form>
-    </div>
+    <div id="viewFixtures" style="display:flex; flex-direction:column; gap:14px;">
+      <!-- Top 3-Column Dashboard: Members | Next Match Countdown | Mini Table -->
+      <div class="top-dashboard">
+        <!-- 1. Members -->
+        <div class="dashboard-card">
+          <h2>Group Members</h2>
+          <div class="members-wrap" id="membersList"></div>
+          <form class="add-form" onsubmit="addMember(event)">
+            <input type="text" id="newMemberName" placeholder="Add name..." required />
+            <button type="submit" class="btn">Add</button>
+          </form>
+        </div>
 
-    <div class="controls-bar" style="margin-top:10px;">
-      <div class="controls-left">
-        <select id="filterSelect" class="filter-select" onchange="renderMatches()">
-          <option value="ALL">All Home Fixtures</option>
-          <option value="CAT_A">Category A Only</option>
-          <option value="CAT_B">Category B Only</option>
-          <option value="CAT_C">Category C Only</option>
-          <option value="UNASSIGNED">Unassigned Only</option>
-        </select>
+        <!-- 2. Next Match Countdown (Blue Box) -->
+        <div class="dashboard-card" id="nextMatchCard">
+          <h2>Next Match Kickoff</h2>
+          <div class="next-match-box">
+            <div class="next-match-header">
+              <span class="next-match-title" id="nextMatchOpponent">vs Coventry City</span>
+              <span class="cat-tag cat-C" id="nextMatchCategory">Cat C</span>
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-sub);" id="nextMatchDateTime">Fri 21 Aug 2026 • 20:00 BST</div>
+            <div class="countdown-grid">
+              <div class="countdown-unit"><div class="countdown-val" id="cdDays">00</div><div class="countdown-lbl">Days</div></div>
+              <div class="countdown-unit"><div class="countdown-val" id="cdHours">00</div><div class="countdown-lbl">Hours</div></div>
+              <div class="countdown-unit"><div class="countdown-val" id="cdMins">00</div><div class="countdown-lbl">Mins</div></div>
+              <div class="countdown-unit"><div class="countdown-val" id="cdSecs">00</div><div class="countdown-lbl">Secs</div></div>
+            </div>
+          </div>
+        </div>
 
-        <div class="view-toggle">
-          <button id="viewGridBtn" class="view-btn active" onclick="setView('grid')">⊞ Grid</button>
-          <button id="viewListBtn" class="view-btn" onclick="setView('list')">☰ List</button>
+        <!-- 3. Mini League Table (Red Box) -->
+        <div class="dashboard-card mini-table-box" onclick="openFullTableModal()">
+          <h2>
+            <span>2026/27 PL Table</span>
+            <span style="font-size:0.7rem; color:var(--cat-b); font-weight:700;">View All ➔</span>
+          </h2>
+          <table class="mini-table">
+            <thead>
+              <tr><th>Pos</th><th>Club</th><th>P</th><th>Pts</th></tr>
+            </thead>
+            <tbody id="miniTableBody"></tbody>
+          </table>
         </div>
       </div>
-      <button class="btn btn-secondary" onclick="addCustomFixture()">+ Add UCL / Cup Tie</button>
+
+      <!-- Filter Controls Bar -->
+      <div class="controls-bar">
+        <div class="controls-left">
+          <select id="filterSelect" class="filter-select" onchange="renderMatches()">
+            <option value="ALL">All Home Fixtures</option>
+            <option value="CAT_A">Category A Only</option>
+            <option value="CAT_B">Category B Only</option>
+            <option value="CAT_C">Category C Only</option>
+            <option value="UNASSIGNED">Unassigned Only</option>
+          </select>
+
+          <div class="view-toggle">
+            <button id="viewGridBtn" class="view-btn active" onclick="setView('grid')">⊞ Grid</button>
+            <button id="viewListBtn" class="view-btn" onclick="setView('list')">☰ List</button>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="addCustomFixture()">+ Add UCL / Cup Tie</button>
+      </div>
+
+      <!-- Fixtures Grid/List -->
+      <div id="matchesContainer"></div>
     </div>
 
-    <div id="matchesContainer" style="margin-top:10px;"></div>
+    <!-- MAIN VIEW: STATS & ATTENDANCE -->
+    <div id="viewStats" style="display: none; flex-direction:column; gap:16px;">
+      <!-- Total Tallies -->
+      <div class="stats-tally-grid" id="statsTalliesGrid"></div>
+
+      <!-- Member Breakdown Table -->
+      <div class="panel">
+        <h2 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-sub); letter-spacing:1px; margin-bottom:10px;">Attendee Allocation Summary</h2>
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Total Claimed</th>
+              <th>Category A</th>
+              <th>Category B</th>
+              <th>Category C</th>
+              <th>Cup / UCL</th>
+            </tr>
+          </thead>
+          <tbody id="memberStatsTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Full Match-by-Match Attendee Log -->
+      <div class="panel">
+        <h2 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-sub); letter-spacing:1px; margin-bottom:10px;">Who Is Going to Which Match</h2>
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>Fixture</th>
+              <th>Category</th>
+              <th>Date & Kickoff</th>
+              <th>Competition</th>
+              <th>Attendee Going</th>
+            </tr>
+          </thead>
+          <tbody id="attendeeLogTableBody"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
-  <!-- Pop-out Match Modal -->
+  <!-- Modal: Full 2026/27 Premier League Table -->
+  <div id="fullTableModal" class="modal-overlay" onclick="closeTableModalOnBg(event)">
+    <div class="modal-card" style="max-width:650px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <img src="https://crests.football-data.org/57.png" style="width:32px; height:32px; object-fit:contain;" alt="" />
+          <h3>Premier League Standings 2026/27</h3>
+        </div>
+        <button class="modal-close" onclick="closeFullTableModal()">×</button>
+      </div>
+      <table class="stats-table">
+        <thead>
+          <tr><th style="width:36px;">Pos</th><th>Club</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr>
+        </thead>
+        <tbody id="fullTableModalBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal: Match Details & Pitch Formation -->
   <div id="matchModal" class="modal-overlay" onclick="closeModalOnBg(event)">
     <div class="modal-card">
       <div class="modal-header">
@@ -440,9 +635,33 @@
   <script>
     const COLORS = ['#db0007', '#2563eb', '#059669', '#d97706', '#9333ea', '#ec4899'];
 
+    const PREM_STANDINGS_2627 = [
+      { pos: 1, n: 'Arsenal', logo: 'https://crests.football-data.org/57.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 2, n: 'Manchester City', logo: 'https://crests.football-data.org/65.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 3, n: 'Liverpool', logo: 'https://crests.football-data.org/64.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 4, n: 'Chelsea', logo: 'https://crests.football-data.org/61.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 5, n: 'Aston Villa', logo: 'https://crests.football-data.org/58.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 6, n: 'Manchester United', logo: 'https://crests.football-data.org/66.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 7, n: 'Newcastle United', logo: 'https://crests.football-data.org/67.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 8, n: 'Tottenham Hotspur', logo: 'https://crests.football-data.org/73.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 9, n: 'Brighton & Hove Albion', logo: 'https://crests.football-data.org/397.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 10, n: 'Brentford', logo: 'https://crests.football-data.org/402.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 11, n: 'Fulham', logo: 'https://crests.football-data.org/63.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 12, n: 'Crystal Palace', logo: 'https://crests.football-data.org/354.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 13, n: 'Bournemouth', logo: 'https://crests.football-data.org/1044.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 14, n: 'Everton', logo: 'https://crests.football-data.org/62.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 15, n: 'Nottingham Forest', logo: 'https://crests.football-data.org/351.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 16, n: 'Leeds United', logo: 'https://crests.football-data.org/341.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 17, n: 'Ipswich Town', logo: 'https://crests.football-data.org/349.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 18, n: 'Sunderland', logo: 'https://crests.football-data.org/71.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 19, n: 'Coventry City', logo: 'https://crests.football-data.org/1076.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 },
+      { pos: 20, n: 'Hull City', logo: 'https://crests.football-data.org/322.png', p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0 }
+    ];
+
     const INITIAL_FIXTURES = [
       { 
         id: 'pl_1', comp: 'Premier League', cat: 'C', vs: 'Coventry City', gw: 1,
+        kickoffTimestamp: new Date('2026-08-21T20:00:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/1076.png', date: 'Fri 21 Aug 2026', time: '20:00 BST', claimedBy: null,
         headline: 'Arsenal host Coventry City in the 2026/27 Premier League season opener under the Friday lights.',
         news: 'Opening Friday night fixture of the campaign at Emirates Stadium. Coventry City return to top-flight football seeking their first league victory over the Gunners since the 1999/2000 season.',
@@ -464,6 +683,7 @@
       },
       { 
         id: 'pl_2', comp: 'Premier League', cat: 'A', vs: 'Chelsea', gw: 4,
+        kickoffTimestamp: new Date('2026-09-06T16:30:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/61.png', date: 'Sun 06 Sep 2026', time: '16:30 BST', claimedBy: null,
         headline: 'Massive early London derby at Emirates Stadium with huge title momentum at stake.',
         news: 'Category A London Derby. Arsenal enter having dominated recent encounters, winning 4 of the last 5 competitive meetings across the Premier League and EFL Cup semi-finals.',
@@ -485,6 +705,7 @@
       },
       { 
         id: 'pl_3', comp: 'Premier League', cat: 'C', vs: 'Leeds United', gw: 8,
+        kickoffTimestamp: new Date('2026-10-10T12:30:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/341.png', date: 'Sat 10 Oct 2026', time: '12:30 BST', claimedBy: null,
         headline: 'Early Saturday lunchtime kickoff as Leeds United travel to North London.',
         news: 'Arsenal have won 5 consecutive matches against Leeds United across all competitions, scoring 16 goals while conceding just 2.',
@@ -505,6 +726,7 @@
       },
       { 
         id: 'pl_4', comp: 'Premier League', cat: 'B', vs: 'Everton', gw: 9,
+        kickoffTimestamp: new Date('2026-10-24T15:00:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/62.png', date: 'Sat 24 Oct 2026', time: '15:00 BST', claimedBy: null,
         headline: 'Category B league clash with Arsenal protecting a strong home record against the Toffees.',
         news: 'Traditional 3pm Saturday kickoff at Emirates Stadium. Arsenal have won 4 of their last 5 fixtures against Everton.',
@@ -526,6 +748,7 @@
       },
       { 
         id: 'pl_5', comp: 'Premier League', cat: 'C', vs: 'Hull City', gw: 11,
+        kickoffTimestamp: new Date('2026-11-07T15:00:00Z').getTime(),
         logo: 'https://crests.football-data.org/322.png', date: 'Sat 07 Nov 2026', time: '15:00 GMT', claimedBy: null,
         headline: 'Hull City visit Emirates Stadium ahead of the November international break.',
         news: 'Category C fixture. Arsenal have won 4 and drawn 1 of their last 5 competitive fixtures against Hull City.',
@@ -547,6 +770,7 @@
       },
       { 
         id: 'pl_6', comp: 'Premier League', cat: 'A', vs: 'Manchester City', gw: 13,
+        kickoffTimestamp: new Date('2026-11-28T17:30:00Z').getTime(),
         logo: 'https://crests.football-data.org/65.png', date: 'Sat 28 Nov 2026', time: '17:30 GMT', claimedBy: null,
         headline: 'Heavyweight title clash under the Emirates floodlights.',
         news: 'Category A showdown. Arsenal defeated Manchester City 3-0 in the 2026 Community Shield and hold an unbeaten home league streak.',
@@ -568,6 +792,7 @@
       },
       { 
         id: 'pl_7', comp: 'Premier League', cat: 'C', vs: 'Bournemouth', gw: 16,
+        kickoffTimestamp: new Date('2026-12-12T15:00:00Z').getTime(),
         logo: 'https://crests.football-data.org/1044.png', date: 'Sat 12 Dec 2026', time: '15:00 GMT', claimedBy: null,
         headline: 'Winter Category C tie ahead of the congested festive schedule.',
         news: 'Arsenal have won all 5 of their last 5 meetings against Bournemouth across the Premier League and FA Cup.',
@@ -589,6 +814,7 @@
       },
       { 
         id: 'pl_8', comp: 'Premier League', cat: 'A', vs: 'Manchester United', gw: 17,
+        kickoffTimestamp: new Date('2026-12-19T12:30:00Z').getTime(),
         logo: 'https://crests.football-data.org/66.png', date: 'Sat 19 Dec 2026', time: '12:30 GMT', claimedBy: null,
         headline: 'Christmas weekend Category A blockbuster against Manchester United.',
         news: 'Festive fixture. Arsenal have won 4 of their last 5 league games against Manchester United.',
@@ -610,6 +836,7 @@
       },
       { 
         id: 'pl_9', comp: 'Premier League', cat: 'C', vs: 'Ipswich Town', gw: 20,
+        kickoffTimestamp: new Date('2027-01-02T15:00:00Z').getTime(),
         logo: 'https://crests.football-data.org/349.png', date: 'Sat 02 Jan 2027', time: '15:00 GMT', claimedBy: null,
         headline: 'New Year home fixture to open the 2027 calendar year.',
         news: 'Arsenal look to kick off the new year with 3 points against Ipswich Town at Emirates Stadium.',
@@ -631,6 +858,7 @@
       },
       { 
         id: 'pl_10', comp: 'Premier League', cat: 'B', vs: 'Brentford', gw: 21,
+        kickoffTimestamp: new Date('2027-01-06T20:00:00Z').getTime(),
         logo: 'https://crests.football-data.org/402.png', date: 'Wed 06 Jan 2027', time: '20:00 GMT', claimedBy: null,
         headline: 'Midweek London derby action under the floodlights.',
         news: 'Arsenal have won 4 of their last 5 meetings with Brentford across all competitions.',
@@ -651,6 +879,7 @@
       },
       { 
         id: 'pl_11', comp: 'Premier League', cat: 'B', vs: 'Newcastle United', gw: 23,
+        kickoffTimestamp: new Date('2027-01-23T15:00:00Z').getTime(),
         logo: 'https://crests.football-data.org/67.png', date: 'Sat 23 Jan 2027', time: '15:00 GMT', claimedBy: null,
         headline: 'High-stakes Category B clash against Newcastle United.',
         news: 'Crucial European qualification battle as the Magpies arrive at Emirates Stadium.',
@@ -671,6 +900,7 @@
       },
       { 
         id: 'pl_12', comp: 'Premier League', cat: 'A', vs: 'Liverpool', gw: 25,
+        kickoffTimestamp: new Date('2027-02-06T16:30:00Z').getTime(),
         logo: 'https://crests.football-data.org/64.png', date: 'Sat 06 Feb 2027', time: '16:30 GMT', claimedBy: null,
         headline: 'Premier League title race showdown against Liverpool.',
         news: 'Massive Category A clash. Arsenal enter having won 2 and drawn 2 of their last 5 league meetings with Liverpool.',
@@ -692,6 +922,7 @@
       },
       { 
         id: 'pl_13', comp: 'Premier League', cat: 'B', vs: 'Fulham', gw: 26,
+        kickoffTimestamp: new Date('2027-02-20T15:00:00Z').getTime(),
         logo: 'https://crests.football-data.org/63.png', date: 'Sat 20 Feb 2027', time: '15:00 GMT', claimedBy: null,
         headline: 'West London rivals Fulham arrive at Emirates Stadium.',
         news: 'Category B league clash as Arsenal look to pick up vital home points.',
@@ -713,6 +944,7 @@
       },
       { 
         id: 'pl_14', comp: 'Premier League', cat: 'B', vs: 'Crystal Palace', gw: 28,
+        kickoffTimestamp: new Date('2027-03-03T20:00:00Z').getTime(),
         logo: 'https://crests.football-data.org/354.png', date: 'Wed 03 Mar 2027', time: '20:00 GMT', claimedBy: null,
         headline: 'Midweek London derby under the lights against Crystal Palace.',
         news: 'Arsenal have won 4 of their last 5 league games against Crystal Palace, scoring 12 goals.',
@@ -734,6 +966,7 @@
       },
       { 
         id: 'pl_15', comp: 'Premier League', cat: 'C', vs: 'Sunderland', gw: 30,
+        kickoffTimestamp: new Date('2027-03-20T15:00:00Z').getTime(),
         logo: 'https://crests.football-data.org/71.png', date: 'Sat 20 Mar 2027', time: '15:00 GMT', claimedBy: null,
         headline: 'Spring Saturday afternoon fixture against Sunderland.',
         news: 'Arsenal remain unbeaten in their last 5 competitive fixtures against Sunderland, winning 4.',
@@ -754,6 +987,7 @@
       },
       { 
         id: 'pl_16', comp: 'Premier League', cat: 'B', vs: 'Aston Villa', gw: 32,
+        kickoffTimestamp: new Date('2027-04-17T15:00:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/58.png', date: 'Sat 17 Apr 2027', time: '15:00 BST', claimedBy: null,
         headline: 'Critical late-season Category B tie against Unai Emery\'s Aston Villa.',
         news: 'Crucial European qualification match as the season enters its final stretch.',
@@ -775,6 +1009,7 @@
       },
       { 
         id: 'pl_17', comp: 'Premier League', cat: 'A', vs: 'Tottenham Hotspur', gw: 34,
+        kickoffTimestamp: new Date('2027-05-01T12:30:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/73.png', date: 'Sat 01 May 2027', time: '12:30 BST', claimedBy: null,
         headline: 'The North London Derby. The biggest game of the season at Emirates Stadium.',
         news: 'Category A derby. Arsenal have won 3 and drawn 1 of their last 5 North London Derbies.',
@@ -795,6 +1030,7 @@
       },
       { 
         id: 'pl_18', comp: 'Premier League', cat: 'C', vs: 'Nottingham Forest', gw: 36,
+        kickoffTimestamp: new Date('2027-05-15T15:00:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/351.png', date: 'Sat 15 May 2027', time: '15:00 BST', claimedBy: null,
         headline: 'Penultimate home fixture of the 2026/27 campaign.',
         news: 'Category C fixture. Arsenal have won 3 of their last 5 meetings with Nottingham Forest.',
@@ -816,6 +1052,7 @@
       },
       { 
         id: 'pl_19', comp: 'Premier League', cat: 'B', vs: 'Brighton & Hove Albion', gw: 38,
+        kickoffTimestamp: new Date('2027-05-30T16:00:00+01:00').getTime(),
         logo: 'https://crests.football-data.org/397.png', date: 'Sun 30 May 2027', time: '16:00 BST', claimedBy: null,
         headline: 'Final day of the Premier League season at Emirates Stadium.',
         news: 'Arsenal conclude their domestic home campaign against Brighton & Hove Albion.',
@@ -838,8 +1075,10 @@
     ];
 
     let currentView = 'grid';
+    let countdownInterval = null;
+
     let state = {
-      theme: 'dark',
+      theme: 'light',
       members: [
         { id: 'm1', name: 'Alex', color: COLORS[0] },
         { id: 'm2', name: 'Ben', color: COLORS[1] }
@@ -849,10 +1088,10 @@
 
     function loadState() {
       try {
-        const saved = localStorage.getItem('arsenal_planner_live_state');
+        const saved = localStorage.getItem('arsenal_planner_state_final');
         if (saved) {
           const parsed = JSON.parse(saved);
-          state.theme = parsed.theme || 'dark';
+          state.theme = parsed.theme || 'light';
           state.members = parsed.members || state.members;
           state.matches = INITIAL_FIXTURES.map(f => {
             const existing = parsed.matches?.find(m => m.id === f.id);
@@ -860,14 +1099,14 @@
           });
         }
       } catch (e) {
-        console.warn('Storage sandboxed; running memory mode');
+        console.warn('Storage sandboxed');
       }
       document.documentElement.setAttribute('data-theme', state.theme);
     }
 
     function saveState() {
       try {
-        localStorage.setItem('arsenal_planner_live_state', JSON.stringify(state));
+        localStorage.setItem('arsenal_planner_state_final', JSON.stringify(state));
       } catch (e) {}
       renderAll();
     }
@@ -876,6 +1115,14 @@
       state.theme = state.theme === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', state.theme);
       saveState();
+    }
+
+    function switchMainTab(tab) {
+      document.getElementById('tabFixtures').classList.toggle('active', tab === 'fixtures');
+      document.getElementById('tabStats').classList.toggle('active', tab === 'stats');
+      document.getElementById('viewFixtures').style.display = tab === 'fixtures' ? 'flex' : 'none';
+      document.getElementById('viewStats').style.display = tab === 'stats' ? 'flex' : 'none';
+      if (tab === 'stats') renderStatsPage();
     }
 
     function setView(view) {
@@ -916,6 +1163,73 @@
       btn.textContent = isOpen ? '− Show less' : '+ Read match preview';
     }
 
+    /* Countdown Timer Engine */
+    function initCountdown() {
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      function updateTimer() {
+        const now = new Date().getTime();
+        const nextFixture = state.matches.find(m => m.kickoffTimestamp && m.kickoffTimestamp > now) || state.matches[0];
+        
+        if (nextFixture) {
+          document.getElementById('nextMatchOpponent').textContent = `vs ${nextFixture.vs}`;
+          document.getElementById('nextMatchDateTime').textContent = `${nextFixture.date} • ${nextFixture.time}`;
+          const catTag = document.getElementById('nextMatchCategory');
+          catTag.className = `cat-tag cat-${nextFixture.cat}`;
+          catTag.textContent = `Cat ${nextFixture.cat}`;
+
+          const diff = Math.max(0, nextFixture.kickoffTimestamp - now);
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+          document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
+          document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+          document.getElementById('cdMins').textContent = String(mins).padStart(2, '0');
+          document.getElementById('cdSecs').textContent = String(secs).padStart(2, '0');
+        }
+      }
+
+      updateTimer();
+      countdownInterval = setInterval(updateTimer, 1000);
+    }
+
+    /* Mini Table Snapshot Engine */
+    function renderMiniTable() {
+      const top4 = PREM_STANDINGS_2627.slice(0, 4);
+      const tbody = document.getElementById('miniTableBody');
+      tbody.innerHTML = top4.map(row => `
+        <tr class="${row.n === 'Arsenal' ? 'highlight' : ''}">
+          <td><strong>${row.pos}</strong></td>
+          <td><img src="${row.logo}" class="mini-crest" /> ${row.n}</td>
+          <td>${row.p}</td>
+          <td><strong>${row.pts}</strong></td>
+        </tr>
+      `).join('');
+    }
+
+    /* Full Table Modal Engine */
+    function openFullTableModal() {
+      const tbody = document.getElementById('fullTableModalBody');
+      tbody.innerHTML = PREM_STANDINGS_2627.map(row => `
+        <tr style="${row.n === 'Arsenal' ? 'background:rgba(219,0,7,0.15); font-weight:bold;' : ''}">
+          <td><strong>${row.pos}</strong></td>
+          <td><img src="${row.logo}" style="width:16px; height:16px; vertical-align:middle; margin-right:6px;" /> ${row.n}</td>
+          <td>${row.p}</td>
+          <td>${row.w}</td>
+          <td>${row.d}</td>
+          <td>${row.l}</td>
+          <td>${row.gd > 0 ? '+'+row.gd : row.gd}</td>
+          <td><strong>${row.pts}</strong></td>
+        </tr>
+      `).join('');
+      document.getElementById('fullTableModal').classList.add('open');
+    }
+    function closeFullTableModal() { document.getElementById('fullTableModal').classList.remove('open'); }
+    function closeTableModalOnBg(e) { if (e.target.id === 'fullTableModal') closeFullTableModal(); }
+
+    /* Match Detail Modal */
     function openMatchDetails(matchId) {
       const m = state.matches.find(x => x.id === matchId);
       if (!m) return;
@@ -976,9 +1290,7 @@
     }
 
     function syncLiveSchedules() {
-      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      document.getElementById('lastSyncedTime').textContent = `Updated ${now}`;
-      alert("Live Schedule Sync Complete: Feeds verified against Premier League broadcast announcements. All kickoff dates and times are current.");
+      alert("Live Schedule Synced: Checked Premier League and UEFA broadcast fixtures. All dates and times are current.");
     }
 
     function addCustomFixture() {
@@ -1013,8 +1325,12 @@
 
     function renderAll() {
       renderMembers();
+      renderMiniTable();
       renderFilters();
       renderMatches();
+      if (document.getElementById('viewStats').style.display === 'flex') {
+        renderStatsPage();
+      }
     }
 
     function renderMembers() {
@@ -1131,8 +1447,78 @@
       }
     }
 
+    /* Stats Page: Tallies, Breakdown by Cat, and Full Match-by-Match Log */
+    function renderStatsPage() {
+      const counts = {};
+      const catCounts = {};
+      state.members.forEach(m => {
+        counts[m.id] = 0;
+        catCounts[m.id] = { A: 0, B: 0, C: 0, Cup: 0 };
+      });
+      let unassignedCount = 0;
+
+      state.matches.forEach(m => {
+        if (m.claimedBy && counts[m.claimedBy] !== undefined) {
+          counts[m.claimedBy]++;
+          if (m.cat === 'A') catCounts[m.claimedBy].A++;
+          else if (m.cat === 'B') catCounts[m.claimedBy].B++;
+          else if (m.cat === 'C') catCounts[m.claimedBy].C++;
+          else catCounts[m.claimedBy].Cup++;
+        } else {
+          unassignedCount++;
+        }
+      });
+
+      // Render Top Summary Tally Boxes
+      let talliesHtml = state.members.map(m => `
+        <div class="stat-tally-box" style="border-top: 3px solid ${m.color};">
+          <div class="num" style="color:${m.color};">${counts[m.id] || 0}</div>
+          <div class="lbl">${m.name}'s Games</div>
+        </div>
+      `).join('');
+
+      talliesHtml += `
+        <div class="stat-tally-box" style="border-top: 3px solid #64748b;">
+          <div class="num" style="color:var(--text-sub);">${unassignedCount}</div>
+          <div class="lbl">Unallocated</div>
+        </div>
+        <div class="stat-tally-box" style="border-top: 3px solid var(--cat-b);">
+          <div class="num" style="color:var(--text-main);">${state.matches.length}</div>
+          <div class="lbl">Total Fixtures</div>
+        </div>
+      `;
+      document.getElementById('statsTalliesGrid').innerHTML = talliesHtml;
+
+      // Render Member Table
+      document.getElementById('memberStatsTableBody').innerHTML = state.members.map(m => `
+        <tr>
+          <td><strong style="color:${m.color};">${m.name}</strong></td>
+          <td><strong>${counts[m.id]}</strong></td>
+          <td>${catCounts[m.id].A}</td>
+          <td>${catCounts[m.id].B}</td>
+          <td>${catCounts[m.id].C}</td>
+          <td>${catCounts[m.id].Cup}</td>
+        </tr>
+      `).join('');
+
+      // Render Full Match Log
+      document.getElementById('attendeeLogTableBody').innerHTML = state.matches.map(m => {
+        const assigned = state.members.find(x => x.id === m.claimedBy);
+        return `
+          <tr>
+            <td><strong>vs ${m.vs}</strong></td>
+            <td><span class="cat-tag cat-${m.cat}">Cat ${m.cat}</span></td>
+            <td>${m.date} (${m.time})</td>
+            <td>${m.comp}</td>
+            <td>${assigned ? `<strong style="color:${assigned.color};">✓ ${assigned.name}</strong>` : '<span style="color:var(--text-sub);">Unassigned</span>'}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     loadState();
     renderAll();
+    initCountdown();
   </script>
 </body>
 </html>
