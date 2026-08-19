@@ -83,6 +83,19 @@
     .btn-secondary:hover { background: rgba(255,255,255,0.25); }
     .btn-wa { background: #25d366; color: #000; font-weight: 700; }
     .btn-wa:hover { background: #20ba5a; }
+    .btn-pass-wa {
+      background: #25d366;
+      color: #000;
+      font-weight: 700;
+      font-size: 0.74rem;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
 
     /* Nav Tabs */
     .nav-tabs { display: flex; gap: 8px; border-bottom: 2px solid var(--card-border); padding-bottom: 8px; }
@@ -167,6 +180,19 @@
     .next-match-box { display: flex; flex-direction: column; gap: 6px; }
     .next-match-header { display: flex; justify-content: space-between; align-items: center; }
     .next-match-title { font-size: 0.95rem; font-weight: 700; }
+    .next-attendee-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: var(--inner-bg);
+      border: 1px solid var(--card-border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      align-self: flex-start;
+      margin-top: 2px;
+    }
     .countdown-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -263,6 +289,7 @@
       cursor: default;
     }
     .alloc-status { display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; text-transform: uppercase; color: var(--text-sub); }
+    .claim-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
     .claim-btns { display: flex; flex-wrap: wrap; gap: 6px; }
     .claim-btn {
       border: 1px solid var(--card-border);
@@ -282,7 +309,7 @@
       border-radius: 10px;
       padding: 12px 16px;
       display: grid;
-      grid-template-columns: 80px 1.5fr 44px 1fr auto;
+      grid-template-columns: 80px 1.5fr 44px 1fr auto auto;
       align-items: center;
       gap: 12px;
       cursor: pointer;
@@ -408,7 +435,7 @@
       </div>
       <div class="header-btns">
         <button class="btn btn-secondary" onclick="toggleTheme()">🌓 Light/Dark</button>
-        <button class="btn btn-wa" onclick="copyWhatsAppSummary()">💬 WhatsApp</button>
+        <button class="btn btn-wa" onclick="copyFullSeasonWhatsApp()">📋 Season Summary</button>
       </div>
     </header>
 
@@ -439,7 +466,10 @@
               <span class="next-match-title" id="nextMatchOpponent">vs Coventry City</span>
               <span class="cat-tag cat-C" id="nextMatchCategory">Cat C</span>
             </div>
-            <div style="font-size:0.75rem; color:var(--text-sub);" id="nextMatchDateTime">Fri 21 Aug 2026 • 20:00 BST</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
+              <span style="font-size:0.75rem; color:var(--text-sub);" id="nextMatchDateTime">Fri 21 Aug 2026 • 20:00 BST</span>
+              <span class="next-attendee-tag" id="nextMatchAttendeeBadge">Pass: Unassigned</span>
+            </div>
             <div class="countdown-grid">
               <div class="countdown-unit"><div class="countdown-val" id="cdDays">00</div><div class="countdown-lbl">Days</div></div>
               <div class="countdown-unit"><div class="countdown-val" id="cdHours">00</div><div class="countdown-lbl">Hours</div></div>
@@ -517,6 +547,7 @@
               <th>Date & Kickoff</th>
               <th>Competition</th>
               <th>Attendee Going</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="attendeeLogTableBody"></tbody>
@@ -555,7 +586,10 @@
             <div id="modalMeta" style="font-size:0.8rem; color:var(--text-sub);"></div>
           </div>
         </div>
-        <button class="modal-close" onclick="closeModal()">×</button>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div id="modalWaBtnSlot"></div>
+          <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
       </div>
 
       <div class="news-accordion">
@@ -609,7 +643,7 @@
     </div>
   </div>
 
-  <!-- LIVE FIREBASE SYNC & CLIENT SCRIPT -->
+  <!-- LIVE FIREBASE SYNC & SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -776,6 +810,42 @@
       btn.textContent = isOpen ? '− Show less' : '+ Read match preview';
     }
 
+    /* Single-Match WhatsApp Launcher */
+    function shareMatchWhatsApp(matchId, event) {
+      if (event) event.stopPropagation();
+      const m = state.matches.find(x => x.id === matchId);
+      if (!m) return;
+
+      const member = state.members.find(x => x.id === m.claimedBy);
+      const attendeeName = member ? member.name : "Unassigned";
+
+      const text = 
+`🎟️ *ARSENAL FC MATCH TICKET PASS (2026/27)*
+─────────────────────────
+⚽ *Arsenal vs ${m.vs}*
+👤 *Pass Holder:* ${attendeeName}
+📅 *Date & Kickoff:* ${m.date} (${m.time})
+🏟️ *Venue:* Emirates Stadium
+🏷️ *Match Tier:* Category ${m.cat}
+🏆 *Competition:* ${m.comp}
+─────────────────────────
+See you at the Emirates! 🔴⚪`;
+
+      const encoded = encodeURIComponent(text);
+      window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+    }
+
+    function copyFullSeasonWhatsApp() {
+      let text = "🔴 *Arsenal Home Match Allocations (2026/27)* ⚪\n\n";
+      state.matches.forEach(m => {
+        const member = state.members.find(x => x.id === m.claimedBy);
+        const name = member ? member.name : "Unassigned";
+        text += `• *${m.date}* | vs ${m.vs} [Cat ${m.cat}] ➔ *${name}*\n`;
+      });
+      navigator.clipboard.writeText(text).then(() => { alert("Copied full season summary to clipboard!"); });
+    }
+
+    /* Next Match Countdown & Dynamic Attendee Badge */
     function initCountdown() {
       if (countdownInterval) clearInterval(countdownInterval);
 
@@ -789,6 +859,19 @@
           const catTag = document.getElementById('nextMatchCategory');
           catTag.className = `cat-tag cat-${nextFixture.cat}`;
           catTag.textContent = `Cat ${nextFixture.cat}`;
+
+          // Update Attendee Badge
+          const assigned = state.members.find(x => x.id === nextFixture.claimedBy);
+          const badge = document.getElementById('nextMatchAttendeeBadge');
+          if (assigned) {
+            badge.style.color = assigned.color;
+            badge.style.borderColor = assigned.color;
+            badge.textContent = `Pass: ✓ ${assigned.name}`;
+          } else {
+            badge.style.color = 'var(--text-sub)';
+            badge.style.borderColor = 'var(--card-border)';
+            badge.textContent = 'Pass: Unassigned';
+          }
 
           const diff = Math.max(0, nextFixture.kickoffTimestamp - now);
           const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -853,6 +936,15 @@
       document.getElementById('modalNewsFull').classList.remove('open');
       document.getElementById('newsToggleBtn').textContent = '+ Read match preview';
 
+      // Setup Modal WhatsApp Button
+      const assigned = state.members.find(x => x.id === m.claimedBy);
+      const slot = document.getElementById('modalWaBtnSlot');
+      if (assigned) {
+        slot.innerHTML = `<button class="btn-pass-wa" onclick="window.shareMatchWhatsApp('${m.id}', event)">💬 WhatsApp Pass</button>`;
+      } else {
+        slot.innerHTML = '';
+      }
+
       const oppWrap = document.getElementById('modalOpponentLineup');
       if (m.awayLineup) {
         oppWrap.innerHTML = `
@@ -887,16 +979,6 @@
 
     function closeModal() { document.getElementById('matchModal').classList.remove('open'); }
     function closeModalOnBg(e) { if (e.target.id === 'matchModal') closeModal(); }
-
-    function copyWhatsAppSummary() {
-      let text = "🔴 *Arsenal Home Match Allocations (2026/27)* ⚪\n\n";
-      state.matches.forEach(m => {
-        const member = state.members.find(x => x.id === m.claimedBy);
-        const name = member ? member.name : "Unassigned";
-        text += `• *${m.date}* | vs ${m.vs} [Cat ${m.cat}] ➔ *${name}*\n`;
-      });
-      navigator.clipboard.writeText(text).then(() => { alert("Copied summary to clipboard!"); });
-    }
 
     function addCustomFixture() {
       const vs = prompt("Opponent Name (e.g. Real Madrid, PSG, Bayern):");
@@ -987,6 +1069,7 @@
             <div class="fixture-card" onclick="window.openMatchDetails('${m.id}')">
               <div class="card-top">
                 <span class="cat-tag cat-${m.cat}">Category ${m.cat} • ${m.comp}</span>
+                ${assigned ? `<button class="btn-pass-wa" onclick="window.shareMatchWhatsApp('${m.id}', event)">💬 Share Pass</button>` : ''}
               </div>
 
               <div class="teams-row">
@@ -1004,16 +1087,18 @@
                     ${assigned ? 'Claimed: ' + assigned.name : 'Unassigned'}
                   </span>
                 </div>
-                <div class="claim-btns">
-                  ${state.members.map(mem => {
-                    const isClaimed = m.claimedBy === mem.id;
-                    const style = isClaimed ? `background:${mem.color}; border-color:${mem.color};` : '';
-                    return `
-                      <button class="claim-btn ${isClaimed ? 'claimed' : ''}" style="${style}" onclick="window.toggleTicket('${m.id}', '${mem.id}', event)">
-                        ${isClaimed ? '✓ ' : '+ '} ${mem.name}
-                      </button>
-                    `;
-                  }).join('')}
+                <div class="claim-row">
+                  <div class="claim-btns">
+                    ${state.members.map(mem => {
+                      const isClaimed = m.claimedBy === mem.id;
+                      const style = isClaimed ? `background:${mem.color}; border-color:${mem.color};` : '';
+                      return `
+                        <button class="claim-btn ${isClaimed ? 'claimed' : ''}" style="${style}" onclick="window.toggleTicket('${m.id}', '${mem.id}', event)">
+                          ${isClaimed ? '✓ ' : '+ '} ${mem.name}
+                        </button>
+                      `;
+                    }).join('')}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1045,6 +1130,9 @@
                     </button>
                   `;
                 }).join('')}
+              </div>
+              <div>
+                ${assigned ? `<button class="btn-pass-wa" onclick="window.shareMatchWhatsApp('${m.id}', event)">💬</button>` : ''}
               </div>
             </div>
           `;
@@ -1112,12 +1200,12 @@
             <td>${m.date} (${m.time})</td>
             <td>${m.comp}</td>
             <td>${assigned ? `<strong style="color:${assigned.color};">✓ ${assigned.name}</strong>` : '<span style="color:var(--text-sub);">Unassigned</span>'}</td>
+            <td>${assigned ? `<button class="btn-pass-wa" onclick="window.shareMatchWhatsApp('${m.id}', event)">💬 Send Pass</button>` : '-'}</td>
           </tr>
         `;
       }).join('');
     }
 
-    // Attach functions to window so HTML inline onclick handlers work
     window.toggleTheme = toggleTheme;
     window.switchMainTab = switchMainTab;
     window.setView = setView;
@@ -1131,7 +1219,8 @@
     window.openMatchDetails = openMatchDetails;
     window.closeModal = closeModal;
     window.closeModalOnBg = closeModalOnBg;
-    window.copyWhatsAppSummary = copyWhatsAppSummary;
+    window.shareMatchWhatsApp = shareMatchWhatsApp;
+    window.copyFullSeasonWhatsApp = copyFullSeasonWhatsApp;
     window.addCustomFixture = addCustomFixture;
     window.renderMatches = renderMatches;
 
